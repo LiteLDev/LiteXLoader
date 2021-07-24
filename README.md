@@ -74,7 +74,7 @@ VS项目采用多目标构建，构建的每种配置对应一种脚本语言
 6. 编译生成成功之后，返回到项目根目录，执行根目录中的 `MakeRelease.cmd`，执行完之后根目录 `RELEASE` 文件夹内的内容即为完整的`LiteXLoader`及所有的依赖库
 
 ## 💻 安装
-项目主要发布于**MineBBS**，请[移步MineBBS](https://www.minebbs.com/)下载。注意，本项目需要 `LiteLoader` 作为前置加载器。
+项目主要发布于**MineBBS**，请[移步MineBBS](https://www.minebbs.com/resources/litexloader-x-bds.2670/)下载。注意，本项目需要 `LiteLoader` 作为前置加载器。
 
 1. 正确安装`LiteLoader`插件加载器
 2. 下载`LiteXLoader`，解压，把全部内容复制到 **BDS** 的`plugins`目录中。如果有冲突，选择覆盖即可。
