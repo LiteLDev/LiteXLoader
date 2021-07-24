@@ -14,6 +14,7 @@ public:
     static Local<Object> newNBT(Tag* p);
 
     Local<Value> readInt(const Arguments& args);
+    Local<Value> readShort(const Arguments& args);
     Local<Value> readLong(const Arguments& args);
     Local<Value> readFloat(const Arguments& args);
     Local<Value> readDouble(const Arguments& args);
@@ -40,3 +41,4 @@ public:
 };
 
 Local<Value> fromItem(const Arguments& args);
+Local<Value> fromPtr(const Arguments& args);
