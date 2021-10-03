@@ -1069,14 +1069,23 @@ Local<Value> PlayerClass::sendForm(const Arguments& args)
             return Local<Value>();
 
         int formId = 0;
+        bool isSimpleForm = true;
         auto jsonForm = SimpleFormClass::extract(args[0]);
-        if(jsonForm == nullptr)
+        if (jsonForm == nullptr)
+        {
             jsonForm = CustomFormClass::extract(args[0]);
+            isSimpleForm = false;
+        }
 
         if (jsonForm != nullptr)
         {
             int formId = Raw_SendRawForm(player, jsonForm->dump());
             ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId] = { EngineScope::currentEngine(),Global<Function>(args[1].asFunction()) };
+            if (isSimpleForm)
+            {
+                ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].buttonCallbacks =
+                    EngineScope::currentEngine()->getNativeInstance<SimpleFormClass>(args[0])->buttonCallbacks;
+            }
 
             return Number::newNumber(formId);
         }

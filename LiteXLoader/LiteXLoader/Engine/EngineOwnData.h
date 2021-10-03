@@ -13,6 +13,7 @@ struct FormCallbackData
 {
     script::ScriptEngine* engine;
     script::Global<script::Function> func;
+    std::map<unsigned, script::Global<Function>> buttonCallbacks;
 };
 
 class Player;

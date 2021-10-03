@@ -99,6 +99,8 @@ Local<Value> SimpleFormClass::addButton(const Arguments& args)
     CHECK_ARG_TYPE(args[0], ValueKind::kString)
     if (args.size() >= 2)
         CHECK_ARG_TYPE(args[1], ValueKind::kString);
+    if (args.size() >= 3)
+        CHECK_ARG_TYPE(args[2], ValueKind::kFunction);
 
     try {
         JSON_VALUE oneButton;
@@ -112,6 +114,9 @@ Local<Value> SimpleFormClass::addButton(const Arguments& args)
             oneButton["image"] = image;
         }
         form["buttons"].push_back(oneButton);
+        buttonCount = form["buttons"].size() - 1;
+        if (args.size() >= 3)
+            buttonCallbacks[buttonCount] = args[2].asFunction();
         return this->getScriptObject();
     }
     catch (JSON_VALUE::exception& e) {
@@ -377,11 +382,30 @@ bool CallFormCallback(Player* player, unsigned formId, const string& data)
                 continue;
             }
 
+            Global<Function> buttonCallback;
+            bool hasButtonCallback = false;
+            try
+            {
+                unsigned id;
+                if (JsonToValue(data).isNumber()) {
+                    hasButtonCallback = true;
+                    buttonCallback = callback.buttonCallbacks.at((unsigned)JsonToValue(data).asNumber().toInt32());
+                }
+            }
+            catch (...)
+            {
+                hasButtonCallback = false;
+            }
+
             EngineScope scope(callback.engine);
             Local<Value> res{};
             try
             {
                 res = callback.func.get().call({}, PlayerClass::newPlayer(player), JsonToValue(data));
+                if (hasButtonCallback)
+                {
+                    buttonCallback.get().call({}, PlayerClass::newPlayer(player));
+                }
             }
             catch (const Exception& e)
             {

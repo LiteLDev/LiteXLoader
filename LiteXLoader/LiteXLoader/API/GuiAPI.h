@@ -9,6 +9,7 @@ class SimpleFormClass : public ScriptClass
 {
 private:
     JSON_ROOT form;
+    unsigned buttonCount = 0;
 
 public:
     SimpleFormClass();
@@ -17,6 +18,8 @@ public:
     {
         return &form;
     }
+
+    std::map<unsigned, script::Global<Function>> buttonCallbacks;
 
     static Local<Object> newForm();
     static JSON_ROOT* extract(Local<Value> v);
