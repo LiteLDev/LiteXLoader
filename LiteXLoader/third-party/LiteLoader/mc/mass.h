@@ -79,7 +79,7 @@ class Value;
 }
 
 struct RakAddr_t {
-    char filler[0x90];
+    char filler[136];
     std::string toString() {
         char buf[256];
         SymCall("?ToString@SystemAddress@RakNet@@QEBAX_NPEADD@Z", void, void *, bool, char *, char)(
@@ -87,13 +87,19 @@ struct RakAddr_t {
         return buf;
     }
 };
+
+struct RakGUID_t {
+    void* unk;
+    short* unk2;
+};
 struct RakPeer_t {
     RakPeer_t(RakPeer_t const &) = delete;
     RakPeer_t(RakPeer_t &&)      = delete;
     RakAddr_t getAdr(NetworkIdentifier const &ni) {
         RakAddr_t rv;
+        RakGUID_t guid = dAccess<RakGUID_t>(this, 8);
         SymCall("?GetSystemAddressFromGuid@RakPeer@RakNet@@UEBA?AUSystemAddress@2@URakNetGUID@2@@Z",
-                void, void *, RakAddr_t *, NetworkIdentifier const *)(this, &rv, &ni);
+                void, void *, RakAddr_t *, RakGUID_t const *)(this, &rv, &guid);
         return rv;
     }
 };

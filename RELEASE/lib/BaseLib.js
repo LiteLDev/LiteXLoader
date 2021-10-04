@@ -389,3 +389,7 @@ cjs.js end
 For Compatibility
 */
 globalThis.file = File;
+DirectionAngle.prototype.valueOf = function()
+{
+    return this.toFacing();
+}
