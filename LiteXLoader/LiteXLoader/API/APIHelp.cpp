@@ -341,6 +341,8 @@ Local<Value> JsonToValue(std::string jsonStr)
     {
         if (jsonStr.empty())
             return String::newString("");
+        if (jsonStr.front() == '\"' && jsonStr.back() == '\"')
+            return String::newString(jsonStr.substr(1,jsonStr.size()-2));
         auto j = JSON_VALUE::parse(jsonStr);
         return JsonToValue(j);
     }

@@ -135,8 +135,8 @@ Local<Value> DbClass::get(const Arguments& args)
         string res;
         if(!Raw_DBGet(kvdb,args[0].asString().toString(),res))
             return Local<Value>();
-        else
-            return JsonToValue(res);
+        
+        return JsonToValue(res);
     }
     CATCH("Fail in DbGet!")
 }
