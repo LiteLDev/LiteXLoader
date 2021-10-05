@@ -22,7 +22,8 @@ void HotManageMessageCallback(ModuleMessage& msg)
         auto list = LxlListLocalAllPlugins();
 
         //多线程锁
-        lock_guard<mutex> lock(globalShareData->hotManageLock);
+        // ======================= Rewrite here =======================
+        //lock_guard<mutex> lock(globalShareData->hotManageLock);
 
         for (auto& name : list)
             PRINT(name);

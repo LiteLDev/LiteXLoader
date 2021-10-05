@@ -424,8 +424,9 @@
       <AdditionalDependencies>$(SolutionDir)third-party\LiteLoader\LiteLoader.lib;$(SolutionDir)third-party\ScriptX\lib\ScriptX-Lua.lib;$(SolutionDir)third-party\Lua\lib\lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist $(LocalDebuggerWorkingDirectory)\plugins\ (
+copy /Y $(TargetPath) $(LocalDebuggerWorkingDirectory)\plugins\
+)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Js|x64'">
@@ -452,8 +453,9 @@
       <AdditionalDependencies>$(SolutionDir)third-party\LiteLoader\LiteLoader.lib;$(SolutionDir)third-party\ScriptX\lib\ScriptX-Js.lib;$(SolutionDir)third-party\V8\lib\v8.lib;$(SolutionDir)third-party\V8\lib\v8_libbase.lib;$(SolutionDir)third-party\V8\lib\v8_libplatform.lib;$(SolutionDir)third-party\V8\lib\zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>if exist $(LocalDebuggerWorkingDirectory)\plugins\ (
+copy /Y $(TargetPath) $(LocalDebuggerWorkingDirectory)\plugins\
+)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

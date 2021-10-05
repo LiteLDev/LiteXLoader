@@ -1231,7 +1231,7 @@ Local<Value> PlayerClass::refreshChunks(const Arguments& args)
         if (!player)
             return Local<Value>();
 
-        return Boolean::newBoolean(Raw_RefrashChunks(player));
+        return Boolean::newBoolean(Raw_RefreshChunks(player));
     }
     CATCH("Fail in setOnFire!");
 }

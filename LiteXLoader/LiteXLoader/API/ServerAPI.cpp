@@ -18,6 +18,13 @@ Local<Value> McClass::setMotd(const Arguments& args)
 
 Local<Value> McClass::crashBDS(const Arguments& args)
 {
-    *(int*)(uintptr_t)0 = 2;
+    DWORD tmp;
+    long long* m = (long long*)GetModuleHandle(NULL);
+    VirtualProtect((LPVOID)m, (SIZE_T)8, PAGE_READWRITE, &tmp);
+    for (size_t a = 0; a < 0xfffff; a++)
+    {
+        VirtualProtect((LPVOID)((long long)m + a * 8), (SIZE_T)16, PAGE_READWRITE, &tmp);
+        *(m + a) = 114514;
+    }
     return Boolean::newBoolean(true);
 }

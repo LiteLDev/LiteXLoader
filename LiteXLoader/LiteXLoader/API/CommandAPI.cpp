@@ -192,6 +192,7 @@ bool ProcessDebugEngine(const string& cmd)
             if (cmd == "stop")
             {
                 WARN("请先退出Debug实时调试模式再使用stop！");
+                return true;
             }
             else
             {

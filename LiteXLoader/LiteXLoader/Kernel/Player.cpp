@@ -183,7 +183,7 @@ bool Raw_CrashPlayer(Player* player)
     return Raw_SendCrashClientPacket(player);
 }
 
-bool Raw_RefrashChunks(Player* player)
+bool Raw_RefreshChunks(Player* player)
 {
     SymCall("?resendAllChunks@ServerPlayer@@UEAAXXZ", void, Player*)(player);
     return true;

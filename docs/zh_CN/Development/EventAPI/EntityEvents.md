@@ -150,3 +150,24 @@
 - 拦截事件：函数返回`false`
 
 <br>
+
+#### `"onChangeArmorStand"` - 操作盔甲架
+
+- 监听函数原型
+  `function(as,pl,slot)`
+
+- 参数：
+
+  - as: `Entity`  
+    被操作的盔甲架实体对象
+
+  - pl : `Player`  
+    操作盔甲架的玩家对象
+
+  - slot : `Number`
+
+    装备栏编号
+
+- 拦截事件：函数返回`false`
+
+<br>

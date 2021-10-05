@@ -46,14 +46,14 @@ enum class EVENT_TYPES : int
     onPreJoin=0, onJoin, onLeft, onPlayerCmd, onChat, onPlayerDie, 
     onRespawn, onChangeDim, onJump, onSneak, onAttack, onEat, onMove, onSpawnProjectile,
     onFireworkShootWithCrossbow, onSetArmor, onRide, onStepOnPressurePlate,
-    onUseItem, onTakeItem, onDropItem, onUseItemOn, onInventoryChange,
+    onUseItem, onTakeItem, onDropItem, onUseItemOn, onInventoryChange, onChangeArmorStand,
     onStartDestroyBlock, onDestroyBlock, onWitherBossDestroy, onPlaceBlock, onBedExplode, onRespawnAnchorExplode, onLiquidFlow,
     onOpenContainer, onCloseContainer, onContainerChange, onOpenContainerScreen, 
     onMobDie, onMobHurt, onExplode, onBlockExploded, onCmdBlockExecute, onRedStoneUpdate, onProjectileHitEntity,
     onProjectileHitBlock, onBlockInteracted, onUseRespawnAnchor, onFarmLandDecay, onUseFrameBlock,
     onPistonPush, onHopperSearchItem, onHopperPushOut, onFireSpread, onNpcCmd,
     onScoreChanged, onServerStarted, onConsoleCmd, onFormSelected, onConsoleOutput, onTick,
-    onMoneyAdd, onMoneyReduce, onMoneyTrans, onMoneySet, onConsumeTotem,
+    onMoneyAdd, onMoneyReduce, onMoneyTrans, onMoneySet, onConsumeTotem, onEffectAdded, onEffectUpdated, onEffectRemoved,
     EVENT_COUNT
 };
 static const std::unordered_map<string, EVENT_TYPES> EventsMap{
@@ -82,6 +82,7 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onDropItem",EVENT_TYPES::onDropItem},
     {"onUseItemOn",EVENT_TYPES::onUseItemOn},
     {"onInventoryChange",EVENT_TYPES::onInventoryChange},
+    {"onChangeArmorStand",EVENT_TYPES::onChangeArmorStand},
     {"onStartDestroyBlock",EVENT_TYPES::onStartDestroyBlock},
     {"onDestroyBlock",EVENT_TYPES::onDestroyBlock},
     {"onWitherBossDestroy",EVENT_TYPES::onWitherBossDestroy},
@@ -119,7 +120,10 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onMoneyTrans",EVENT_TYPES::onMoneyTrans},
     {"onMoneySet",EVENT_TYPES::onMoneySet},
     {"onFormSelected",EVENT_TYPES::onFormSelected},
-    {"onConsumeTotem",EVENT_TYPES::onConsumeTotem}
+    {"onConsumeTotem",EVENT_TYPES::onConsumeTotem},
+    {"onEffectAdded",EVENT_TYPES::onEffectAdded},
+    {"onEffectRemoved",EVENT_TYPES::onEffectRemoved},
+    {"onEffectUpdated",EVENT_TYPES::onEffectUpdated}
 };
 struct ListenerListType
 {
@@ -762,6 +766,42 @@ THook(void, "?consumeTotem@Player@@UEAA_NXZ", Player* player)
     return original(player);
 }
 
+// ===== onEffectAdded =====
+THook(void, "?onEffectAdded@ServerPlayer@@MEAAXAEAVMobEffectInstance@@@Z", Player* player, void* effect)
+{
+    IF_LISTENED(EVENT_TYPES::onEffectAdded)
+    {
+        HashedString* effectName = SymCall("?getComponentName@MobEffectInstance@@QEBAAEBVHashedString@@XZ", HashedString*, void*)(effect);
+        CallEventRtnVoid(EVENT_TYPES::onEffectAdded, PlayerClass::newPlayer(player) , effectName->getString());
+    }
+    IF_LISTENED_END(EVENT_TYPES::onEffectAdded);
+    return original(player,effect);
+}
+
+// ===== onEffectRemoved =====
+THook(void, "?onEffectRemoved@ServerPlayer@@MEAAXAEAVMobEffectInstance@@@Z", Player* player, void* effect)
+{
+    IF_LISTENED(EVENT_TYPES::onEffectRemoved)
+    {
+        HashedString* effectName = SymCall("?getComponentName@MobEffectInstance@@QEBAAEBVHashedString@@XZ", HashedString*, void*)(effect);
+        CallEventRtnVoid(EVENT_TYPES::onEffectRemoved, PlayerClass::newPlayer(player), effectName->getString());
+    }
+    IF_LISTENED_END(EVENT_TYPES::onEffectRemoved);
+    return original(player, effect);
+}
+
+// ===== onEffectUpdated =====
+THook(void, "?onEffectUpdated@ServerPlayer@@MEAAXAEAVMobEffectInstance@@@Z", Player* player, void* effect)
+{
+    IF_LISTENED(EVENT_TYPES::onEffectUpdated)
+    {
+        HashedString* effectName = SymCall("?getComponentName@MobEffectInstance@@QEBAAEBVHashedString@@XZ", HashedString*, void*)(effect);
+        CallEventRtnVoid(EVENT_TYPES::onEffectUpdated, PlayerClass::newPlayer(player), effectName->getString());
+    }
+    IF_LISTENED_END(EVENT_TYPES::onEffectUpdated);
+    return original(player, effect);
+}
+
 /* onTurnLectern // 由于还是不能拦截掉书，暂时注释
 THook(void, "?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBVLecternUpdatePacket@@@Z",
     ServerNetworkHandler* handler, NetworkIdentifier* id, Packet* pkt)
@@ -803,6 +843,18 @@ THook(void, "?inventoryChanged@Player@@UEAAXAEAVContainer@@HAEBVItemStack@@1_N@Z
     IF_LISTENED_END(EVENT_TYPES::onInventoryChange);
 
     return original(_this, container, slotNumber, oldItem, newItem, is);
+}
+
+// ===== onChangeArmorStand =====
+THook(bool, "?_trySwapItem@ArmorStand@@AEAA_NAEAVPlayer@@W4EquipmentSlot@@@Z",
+    Actor* _this, Player* a2, int a3)
+{
+    IF_LISTENED(EVENT_TYPES::onChangeArmorStand)
+    {
+        CallEventRtnBool(EVENT_TYPES::onChangeArmorStand, EntityClass::newEntity(_this), PlayerClass::newPlayer(a2), Number::newNumber(a3));
+    }
+    IF_LISTENED_END(EVENT_TYPES::onChangeArmorStand);
+    return original(_this, a2, a3);
 }
 
 // ===== onStartDestroyBlock =====

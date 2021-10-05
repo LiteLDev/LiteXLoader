@@ -94,9 +94,18 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
 
         ModuleMessage msg(ModuleMessage::MessageType::RemoteRequire, sout.str());
 
+        //========================= Fix =========================
         if (suffix == ".lua")
         {
             if (!ModuleMessage::sendTo(msg, LXL_LANG_LUA))
+            {
+                ERROR("Fail to send remote load request!");
+                return false;
+            }
+        }
+        else if (suffix == ".js")
+        {
+            if (!ModuleMessage::sendTo(msg, LXL_LANG_JS))
             {
                 ERROR("Fail to send remote load request!");
                 return false;
@@ -113,10 +122,13 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
             ERROR("Remote Load Timeout!");
             return false;
         }
+
+        return true;
     }
 
     //多线程锁
-    lock_guard<mutex> lock(globalShareData->hotManageLock);
+    // ======================= Rewrite here =======================
+    //lock_guard<mutex> lock(globalShareData->hotManageLock);
 
     //判重
     string pluginName = std::filesystem::path(filePath).filename().u8string();
@@ -215,7 +227,8 @@ string LxlUnloadPlugin(const std::string& name)
         return LXL_DEBUG_ENGINE_NAME;
 
     //多线程锁
-    lock_guard<mutex> lock(globalShareData->hotManageLock);
+    // ======================= Rewrite here =======================
+    //lock_guard<mutex> lock(globalShareData->hotManageLock);
 
     string unloadedPath = "";
     for (int i = 0; i < lxlModules.size(); ++i)

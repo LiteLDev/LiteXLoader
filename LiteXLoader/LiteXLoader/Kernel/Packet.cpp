@@ -1,5 +1,6 @@
 #include "Global.h"
 #include "Packet.h"
+#include "Player.h"
 #include "SymbolHelper.h"
 #include "Scoreboard.h"
 #include <cstdlib>

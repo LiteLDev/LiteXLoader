@@ -1,5 +1,7 @@
 #include "Global.h"
 #include "Block.h"
+#include "Packet.h"
+#include "Player.h"
 #include "SymbolHelper.h"
 using namespace std;
 
@@ -36,9 +38,14 @@ bool Raw_SetBlockByBlock(IntVec4 pos, Block* block)
 {
     BlockSource* bs = Raw_GetBlockSourceByDim(pos.dim);
 
-    return SymCall("?setBlock@BlockSource@@QEAA_NAEBVBlockPos@@AEBVBlock@@HPEBUActorBlockSyncMessage@@@Z",
-        bool, BlockSource*, BlockPos , Block*, int, void*)
-        (bs, { pos.x, pos.y, pos.z }, block, 0, nullptr);
+    if (!SymCall("?setBlock@BlockSource@@QEAA_NAEBVBlockPos@@AEBVBlock@@HPEBUActorBlockSyncMessage@@@Z", 
+        bool, BlockSource*, BlockPos, Block*, int, void*) (bs, { pos.x, pos.y, pos.z }, block, 0, nullptr))
+        return false;
+
+    auto pls = Raw_GetOnlinePlayers();
+    for (auto& pl : pls)
+        Raw_ResendBlocksAroundPlayer(pl,pos);
+    return true;
 }
 
 bool Raw_SetBlockByName(IntVec4 pos, const string& name)
@@ -60,5 +67,13 @@ bool Raw_SpawnParticle(FloatVec4 pos, const string& type)
         void, Level*, string&, const Vec3&, void*)
         (level, name, { pos.x,pos.y,pos.z }, dim);
 
+    return true;
+}
+
+bool Raw_ResendBlocksAroundPlayer(Player* pl, IntVec4 pos)
+{
+    BlockPos bp{ pos.x,pos.y,pos.z };
+    SymCall("?resendBlocksAroundArea@ItemUseInventoryTransaction@@QEBAXAEAVPlayer@@AEBVBlockPos@@E@Z",
+        void, void*, Player*, BlockPos*, char)(nullptr, pl, &bp, 0);     // this* has not been used
     return true;
 }
