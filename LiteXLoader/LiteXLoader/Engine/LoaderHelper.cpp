@@ -17,7 +17,11 @@
 #include <Engine/RemoteCall.h>
 #include <Engine/MessageSystem.h>
 #include <API/CommandAPI.h>
-
+//*
+#include <tchar.h>
+#include <zip_utils/unzip.h>
+//*/
+using namespace script;
 using namespace std;
 
 //读取辅助函数
@@ -292,4 +296,46 @@ vector<string> LxlListLocalAllPlugins()
 vector<string> LxlListGlocalAllPlugins()
 {
     return globalShareData->pluginsList;
+}
+
+//解压.lxl包
+string UnzipPluginPack(const std::string& filePath)
+{
+    function toWchar = [](const std::string& fp)
+    {
+        //将路径转为TCHAR类型
+        int iUnicode = MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), NULL, 0);
+        WCHAR* pwUnicode = new WCHAR[iUnicode + 2];
+        if (pwUnicode)
+        {
+            ZeroMemory(pwUnicode, iUnicode + 2);
+        }
+        MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), pwUnicode, iUnicode);
+        pwUnicode[iUnicode] = '\0';
+        pwUnicode[iUnicode + 1] = '\0';
+        return pwUnicode;
+    };
+
+    string pluginName = std::filesystem::path(filePath).filename().u8string();
+    pluginName = pluginName.substr(0, pluginName.rfind("."));
+    try
+    {
+        
+        HZIP hz = OpenZip(toWchar(filePath), NULL);
+        SetUnzipBaseDir(hz, toWchar(LXL_PLUGINS_CACHE + pluginName));
+        ZIPENTRY ze; GetZipItem(hz, -1, &ze); 
+        int numitems = ze.index;
+        for (int zi = 0; zi < numitems; zi++)
+        {
+            GetZipItem(hz, zi, &ze);
+            UnzipItem(hz, zi, ze.name);
+        }
+        CloseZip(hz);
+
+        return pluginName;
+    }
+    catch (const std::exception&)
+    {
+        return "";
+    }
 }

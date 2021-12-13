@@ -19,6 +19,7 @@
 
 // 配置文件
 #define LXL_PLUGINS_LOAD_DIR "./plugins"
+#define LXL_PLUGINS_CACHE "./plugins/LiteXLoader/PluginCache/"
 #define LXL_LANGPACK_DIR "./plugins/LiteXLoader/LangPack/"
 #define LXL_CONFIG_PATH "./plugins/LiteXLoader/config.ini"
 

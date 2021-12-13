@@ -101,6 +101,15 @@ void LoadMain()
             if (LxlLoadPlugin(i.path().string()))
                 ++count;
         }
+        if (i.is_regular_file() && i.path().extension() == ".lxl")
+        {
+            string pluginName = UnzipPluginPack(i.path().string());
+            if (pluginName != "")
+            {
+                if (LxlLoadPlugin(LXL_PLUGINS_CACHE + pluginName + "/" + pluginName + LXL_PLUGINS_SUFFIX))
+                    ++count;
+            }
+        }
     }
     logger.info(std::to_string(count) + " " + LXL_MODULE_TYPE + " plugins loaded in all.");
 }

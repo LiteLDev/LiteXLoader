@@ -17,6 +17,8 @@ std::string LxlUnloadPlugin(const std::string& name);
 bool LxlReloadPlugin(const std::string& name);
 //重载所有插件
 bool LxlReloadAllPlugins();
+//解压.lxl包
+string UnzipPluginPack(const std::string& filePath);
 
 //获取当前语言的所有插件
 std::vector<std::string> LxlListLocalAllPlugins();
