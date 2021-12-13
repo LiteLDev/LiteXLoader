@@ -15,6 +15,15 @@
 	#define LXL_PLUGINS_SUFFIX ".lua"
 #endif
 
+// 插件注册信息
+#if defined(SCRIPTX_LANG_JAVASCRIPT)
+	#define LXL_LOADER_NAME "LiteXLoader-Js"
+	#define LXL_LOADER_DESCRIPTION "LiteXLoader Script Plugin Loader For Javascript"
+#elif defined(SCRIPTX_LANG_LUA)
+	#define LXL_LOADER_NAME "LiteXLoader-Lua"
+	#define LXL_LOADER_DESCRIPTION "LiteXLoader Script Plugin Loader For Lua"
+#endif
+
 #define LXL_MODULE_TYPE LXL_SCRIPT_LANG_TYPE
 
 // 配置文件

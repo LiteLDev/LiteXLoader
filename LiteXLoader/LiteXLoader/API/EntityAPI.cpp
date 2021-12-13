@@ -120,7 +120,7 @@ Local<Value> EntityClass::getUniqueID()
     }
     CATCH("Fail in getUniqueID!")
 }
-
+#include <MC/CommandUtils.hpp>
 Local<Value> EntityClass::getName()
 { 
     try{
@@ -128,7 +128,7 @@ Local<Value> EntityClass::getName()
         if (!entity)
             return Local<Value>();
 
-        return String::newString(entity->getNameTag());
+        return String::newString(CommandUtils::getActorName(*entity));
     }
     CATCH("Fail in getEntityName!")
 }
@@ -176,7 +176,7 @@ Local<Value> EntityClass::getBlockPos()
         if (!entity)
             return Local<Value>();
 
-        return IntPos::newPos(entity->getBlockPos());
+        return IntPos::newPos(entity->getBlockPos(), entity->getDimensionId());
     }
     CATCH("Fail in GetEntityBlockPos!")
 }

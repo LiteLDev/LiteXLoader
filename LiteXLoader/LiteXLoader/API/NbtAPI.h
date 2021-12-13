@@ -6,17 +6,6 @@
 extern struct Tag;
 extern ClassDefine<void> NbtStaticBuilder;
 
-class NbtBase
-{
-public:
-    bool canDelete = false;
-
-    //virtual Local<Value> getType(const Arguments& args) = 0;
-    virtual Local<Value> toString(const Arguments& args) = 0;
-    Local<Value> destroy(const Arguments& args);
-};
-
-
 //NBT Static
 class NbtStatic : public ScriptClass
 {
@@ -36,7 +25,7 @@ extern ClassDefine<void> NbtStaticBuilder;
 
 //NBT End
 class EndTag;
-class NbtEndClass : public NbtBase, public ScriptClass
+class NbtEndClass : public ScriptClass
 {
 public:
     EndTag* nbt;
@@ -56,7 +45,7 @@ extern ClassDefine<NbtEndClass> NbtEndClassBuilder;
 
 
 //NBT Byte
-class NbtByteClass : public NbtBase, public ScriptClass
+class NbtByteClass : public ScriptClass 
 {
 public:
     ByteTag* nbt;
@@ -76,7 +65,7 @@ extern ClassDefine<NbtByteClass> NbtByteClassBuilder;
 
 
 //NBT Short
-class NbtShortClass : public NbtBase, public ScriptClass
+class NbtShortClass : public ScriptClass
 {
 public:
     ShortTag* nbt;
@@ -96,7 +85,7 @@ extern ClassDefine<NbtShortClass> NbtShortClassBuilder;
 
 
 //NBT Int
-class NbtIntClass : public NbtBase, public ScriptClass
+class NbtIntClass : public ScriptClass
 {
 public:
     IntTag* nbt;
@@ -116,7 +105,7 @@ extern ClassDefine<NbtIntClass> NbtIntClassBuilder;
 
 
 //NBT Long
-class NbtLongClass : public NbtBase, public ScriptClass
+class NbtLongClass : public ScriptClass
 {
 public:
     Int64Tag* nbt;
@@ -136,7 +125,7 @@ extern ClassDefine<NbtLongClass> NbtLongClassBuilder;
 
 
 //NBT Float
-class NbtFloatClass : public NbtBase, public ScriptClass
+class NbtFloatClass : public ScriptClass
 {
 public:
     FloatTag* nbt;
@@ -156,7 +145,7 @@ extern ClassDefine<NbtFloatClass> NbtFloatClassBuilder;
 
 
 //NBT Double
-class NbtDoubleClass : public NbtBase, public ScriptClass
+class NbtDoubleClass : public ScriptClass
 {
 public:
     DoubleTag* nbt;
@@ -176,7 +165,7 @@ extern ClassDefine<NbtDoubleClass> NbtDoubleClassBuilder;
 
 
 //NBT String
-class NbtStringClass : public NbtBase, public ScriptClass
+class NbtStringClass : public ScriptClass
 {
 public:
     StringTag* nbt;
@@ -196,7 +185,7 @@ extern ClassDefine<NbtStringClass> NbtStringClassBuilder;
 
 
 //NBT ByteArray
-class NbtByteArrayClass : public NbtBase, public ScriptClass
+class NbtByteArrayClass : public ScriptClass
 {
 public:
     ByteArrayTag* nbt;
@@ -216,7 +205,7 @@ extern ClassDefine<NbtByteArrayClass> NbtByteArrayClassBuilder;
 
 
 //NBT List
-class NbtListClass : public NbtBase, public ScriptClass
+class NbtListClass : public ScriptClass
 {
 public:
     ListTag* nbt;
@@ -254,7 +243,7 @@ extern ClassDefine<NbtListClass> NbtListClassBuilder;
 
 
 //NBT Compound
-class NbtCompoundClass : public NbtBase, public ScriptClass
+class NbtCompoundClass : public ScriptClass
 {
 public:
     CompoundTag* nbt;

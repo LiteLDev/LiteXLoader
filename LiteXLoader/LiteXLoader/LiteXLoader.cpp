@@ -40,14 +40,16 @@ extern void LoadDebugEngine();
 
 void Welcome()
 {
-    cout << R"(     _       _  _         __   __  _                        _             )" << endl
-         << R"(    | |     (_)| |        \ \ / / | |                      | |            )" << endl
-         << R"(    | |      _ | |_  ___   \ V /  | |      ___    __ _   __| |  ___  _ __ )" << endl
-         << R"(    | |     | || __|/ _ \   > <   | |     / _ \  / _` | / _` | / _ \| '__|)" << endl
-         << R"(    | |____ | || |_|  __/  / . \  | |____| (_) || (_| || (_| ||  __/| |   )" << endl
-         << R"(    |______||_| \__|\___| /_/ \_\ |______|\___/  \__,_| \__,_| \___||_|   )" << endl;
-
-    cout << "\n\n      =========   LiteXLoader Script Plugin Loader   =========\n" << endl;
+    cout << "\r" << R"(     _       _  _         __   __  _                        _             )" << endl
+         << "\r" << R"(    | |     (_)| |        \ \ / / | |                      | |            )" << endl
+         << "\r" << R"(    | |      _ | |_  ___   \ V /  | |      ___    __ _   __| |  ___  _ __ )" << endl
+         << "\r" << R"(    | |     | || __|/ _ \   > <   | |     / _ \  / _` | / _` | / _ \| '__|)" << endl
+         << "\r" << R"(    | |____ | || |_|  __/  / . \  | |____| (_) || (_| || (_| ||  __/| |   )" << endl
+         << "\r" << R"(    |______||_| \__|\___| /_/ \_\ |______|\___/  \__,_| \__,_| \___||_|   )" << endl
+         << "\r" << R"(                                                                          )" << endl
+         << "\r" << R"(                                                                          )" << endl
+         << "\r" << R"(        =========   LiteXLoader Script Plugin Loader   =========          )" << endl
+         << "\r" << R"(                                                                          )" << endl;
 }
 
 void LoaderInfo()
@@ -63,7 +65,7 @@ void entry()
     //设置全局SEH处理
     _set_se_translator(seh_exception::TranslateSEHtoCE);
 
-    LL::registerPlugin("LiteXLoader", "LiteXLoader Script Plugin Loader",
+    LL::registerPlugin(LXL_LOADER_NAME, LXL_LOADER_DESCRIPTION,
         LL::Version(LXL_VERSION_MAJOR, LXL_VERSION_MINOR, LXL_VERSION_REVISION, LL::Version::LXL_VERSION_STATUS),
         "github.com/LiteLDev/LiteXLoader", "GPL-3", "www.litebds.com");
 

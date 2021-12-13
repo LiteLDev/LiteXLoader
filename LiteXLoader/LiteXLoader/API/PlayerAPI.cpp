@@ -975,7 +975,7 @@ Local<Value> PlayerClass::setBossBar(const Arguments& args)
             percent = 100;
         float value = (float)percent / 100;
 
-        player->sendBossEventPacket(args[0].toStr(), value, 0);     //Set
+        player->sendBossEventPacket(BossEvent::RegisterPlayer, args[0].toStr(), value, BossEventColour::Red);     //Set
         return Boolean::newBoolean(true);
     }
     CATCH("Fail in setBossBar!")
@@ -988,7 +988,7 @@ Local<Value> PlayerClass::removeBossBar(const Arguments& args)
         if (!player)
             return Local<Value>();
 
-        player->sendBossEventPacket(args[0].toStr(), 0, 2);     //Remove
+        player->sendBossEventPacket(BossEvent::UnregisterPlayer, args[0].toStr(), 0, BossEventColour::Red);     //Remove
         return Boolean::newBoolean(true);
     }
     CATCH("Fail in removeBossBar!")

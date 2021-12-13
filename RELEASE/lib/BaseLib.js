@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 (function(){
-    if(globalThis.require) {
+    if(typeof require != "undefined") {
         log('require already exist');
     }
 

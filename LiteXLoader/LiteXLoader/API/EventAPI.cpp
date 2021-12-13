@@ -38,6 +38,7 @@
 using namespace std;
 
 
+
 //////////////////// Listeners ////////////////////
 
 enum class EVENT_TYPES : int
@@ -317,6 +318,7 @@ bool LxlCallEventsOnHotUnload(ScriptEngine* engine)
 
 void InitEventListeners()
 {
+
     using namespace Event;
 
     Event::PlayerJoinEvent::subscribe([](const PlayerJoinEvent& ev) {
@@ -911,7 +913,7 @@ void InitEventListeners()
         }
         IF_LISTENED_END(EVENT_TYPES::onConsoleOutput);
     });
-
+    
     Event::ConsoleCmdEvent::subscribe([](const ConsoleCmdEvent& ev) {
         try
         {

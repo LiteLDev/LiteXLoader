@@ -95,7 +95,7 @@ Block* BlockClass::extract(Local<Value> v)
 //成员函数
 void BlockClass::preloadData(BlockPos bp, int dim)
 {
-    name = block->getNameString();
+    name = block->getTypeName(); // TODO
     type = block->getTypeName();
     id = block->getId();
     pos = { bp.x,bp.y,bp.z,dim };
