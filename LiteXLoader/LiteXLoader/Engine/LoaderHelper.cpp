@@ -19,7 +19,7 @@
 #include <API/CommandAPI.h>
 //*
 #include <tchar.h>
-#include <zip_utils/unzip.h>
+#include <zip_utils/header/unzip.h>
 //*/
 using namespace script;
 using namespace std;
@@ -301,9 +301,9 @@ vector<string> LxlListGlocalAllPlugins()
 //解压.lxl包
 string UnzipPluginPack(const std::string& filePath)
 {
+    //将路径转为TCHAR类型
     function toWchar = [](const std::string& fp)
     {
-        //将路径转为TCHAR类型
         int iUnicode = MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), NULL, 0);
         WCHAR* pwUnicode = new WCHAR[iUnicode + 2];
         if (pwUnicode)
@@ -336,6 +336,7 @@ string UnzipPluginPack(const std::string& filePath)
     }
     catch (const std::exception&)
     {
+        ERROR("Fail to load " + pluginName +"!");
         return "";
     }
 }
