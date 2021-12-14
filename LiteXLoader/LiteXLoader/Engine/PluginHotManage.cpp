@@ -17,6 +17,10 @@ void HotManageMessageCallback(ModuleMessage& msg)
     string cmd = msg.getData();
     
     auto cmdList = SplitCmdLine(cmd);
+    if (cmdList.size() <= 1) {
+        logger.error("Bad Command!");
+        return;
+    }
     if (cmdList[1] == "list")
     {
         //list

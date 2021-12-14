@@ -105,7 +105,7 @@ Local<Value> DeviceClass::getClientId()
         if (!player)
             return Local<Value>();
 
-        return String::newString("");       //=============???
+        return String::newString(player->getClientId());       //=============???
     }
     CATCH("Fail in getClientId!")
 }
