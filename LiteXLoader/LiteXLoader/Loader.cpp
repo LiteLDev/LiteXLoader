@@ -104,7 +104,7 @@ void LoadMain()
         if (i.is_regular_file() && i.path().extension() == ".lxl")
         {
             string pluginName = UnzipPluginPack(i.path().string());
-            if (pluginName != "")
+            if (pluginName != "" && std::filesystem::exists(LXL_PLUGINS_CACHE + pluginName + "/" + pluginName + LXL_PLUGINS_SUFFIX))
             {
                 if (LxlLoadPlugin(LXL_PLUGINS_CACHE + pluginName + "/" + pluginName + LXL_PLUGINS_SUFFIX))
                     ++count;

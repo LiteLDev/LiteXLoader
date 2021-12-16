@@ -299,7 +299,11 @@ SOFTWARE.
         };
     }
 
-    function cjsRequire(id) {
+    function cjsRequire(id, base_path) {
+        if (base_path) {
+            basePath = basePath;
+            currentModule.path = basePath;
+        }
         let parrentModule = currentModule;
         let {path, content} = resolveID(id);
         if(cjsRequire.cache[path] !== undefined) {

@@ -98,6 +98,10 @@ void entry()
     LoadDepends();
     
     //加载插件
+    if (!std::filesystem::exists(LXL_PLUGINS_CACHE))
+    {
+        CreateDirs(LXL_PLUGINS_CACHE);
+    }
     LoadMain();
 
     //注册后台调试
