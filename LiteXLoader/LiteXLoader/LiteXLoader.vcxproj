@@ -39,6 +39,7 @@
     <ClCompile Include="BindAPIs.cpp" />
     <ClCompile Include="Engine\LocalShareData.cpp" />
     <ClCompile Include="Engine\MessageSystem.cpp" />
+    <ClCompile Include="Engine\OperationCount.cpp" />
     <ClCompile Include="Engine\PluginHotManage.cpp" />
     <ClCompile Include="Engine\TimeTaskSystem.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="Engine\LoaderHelper.h" />
     <ClInclude Include="Engine\LocalShareData.h" />
     <ClInclude Include="Engine\MessageSystem.h" />
+    <ClInclude Include="Engine\OperationCount.h" />
     <ClInclude Include="Engine\PluginHotManage.h" />
     <ClInclude Include="Engine\RemoteCall.h" />
     <ClInclude Include="Engine\TimeTaskSystem.h" />

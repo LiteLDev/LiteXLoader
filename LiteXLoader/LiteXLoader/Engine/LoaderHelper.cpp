@@ -17,11 +17,10 @@
 #include <Engine/RemoteCall.h>
 #include <Engine/MessageSystem.h>
 #include <API/CommandAPI.h>
-//*
 #include <tchar.h>
 #include <zip_utils/header/unzip.h>
-//*/
-using namespace script;
+#include <Utils/StringHelper.h>
+
 using namespace std;
 
 //读取辅助函数
@@ -152,6 +151,7 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
         //setData
         ENGINE_OWN_DATA()->pluginName = pluginName;
         ENGINE_OWN_DATA()->pluginPath = filePath;
+        ENGINE_OWN_DATA()->logger.title = SplitStrWithPattern(pluginName,"\.")[0];
 
         //绑定API
         try {

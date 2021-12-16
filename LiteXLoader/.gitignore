@@ -1,3 +1,5 @@
 Debug/
 Release/
 **/*.user
+
+!third-party/**/*.lib

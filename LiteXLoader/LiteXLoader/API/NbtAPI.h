@@ -277,6 +277,8 @@ public:
     Local<Value> toSNBT(const Arguments& args);
     Local<Value> toBinaryNBT(const Arguments& args);
     Local<Value> toString(const Arguments& args);
+
+    Local<Value> destroy(const Arguments& args);
 };
 extern ClassDefine<NbtCompoundClass> NbtCompoundClassBuilder;
 

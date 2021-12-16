@@ -218,8 +218,7 @@ Local<Value> BlockClass::getContainer(const Arguments& args)
 Local<Value> BlockClass::hasBlockEntity(const Arguments& args)
 {
     try {
-        BlockInstance bl = Level::getBlockInstance(pos.getBlockPos(), pos.dim);
-        return Boolean::newBoolean(bl.hasContainer());
+        return Boolean::newBoolean(block->hasBlockEntity());
     }
     CATCH("Fail in hasBlockEntity!");
 }

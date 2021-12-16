@@ -1,0 +1,136 @@
+name: Build LiteXLoader
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+
+env:
+  SOLUTION_FILE_PATH: .
+  BUILD_CONFIGURATION: Release
+
+jobs:
+  Build_Libs:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: "LiteLDev/LiteLoaderBDS"
+
+      - name: Download Server
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: |
+          mkdir Tools/Server
+          ServerLink=$(curl -s https://raw.githubusercontent.com/LiteLDev/LiteLoaderBDS/main/LINK.txt)
+          curl -L -o Tools/Server/server.zip "$ServerLink"
+          unzip -q Tools/Server/server.zip -d Tools/Server/
+        shell: bash
+
+      - name: Build Library
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: |
+          cd Tools
+          LibraryBuilder.exe Server
+        shell: cmd
+
+      - name: Temporarily Save Libs
+        uses: actions/upload-artifact@v2
+        with:
+          name: libs
+          path: LiteLoader/Lib
+
+  Build_LiteXLoader-js:
+    runs-on: windows-2022
+    needs: build_Libs
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Retrieve Saved Libs
+        uses: actions/download-artifact@v2
+        with:
+          name: libs
+          path: LiteXLoader/third-party/LiteLoader/Lib/
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build LiteXLoader
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: MSBuild.exe ./LiteXLoader/LiteXLoader.sln -property:Configuration=Js
+        shell: bash
+
+      - name: MkDirs
+        run: |
+          mkdir D:/build
+        shell: bash
+
+      - name: Copy Files
+        run: |
+          cp -rf ./RELEASE/. D:/build
+          rm -f D:/build/.gitignore
+
+          cp -a ./LiteXLoader/Release/*.dll D:/build
+          cp -a ./LiteXLoader/Release/*.pdb D:/build/lib
+          cp -a ./LiteXLoader/BaseLib/BaseLib.js D:/build/lib
+          cp -a ./LiteXLoader/BaseLib/BaseLib.lua D:/build/lib
+        shell: bash
+
+      - name: Upload BuildFiles
+        uses: actions/upload-artifact@v2
+        with:
+          name: LiteXLoader
+          path: D:/build
+
+  Build_LiteXLoader-lua:
+    runs-on: windows-2022
+    needs: build_Libs
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Retrieve Saved Libs
+        uses: actions/download-artifact@v2
+        with:
+          name: libs
+          path: LiteXLoader/third-party/LiteLoader/Lib/
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+
+      - name: Build LiteXLoader
+        working-directory: ${{env.GITHUB_WORKSPACE}}
+        run: MSBuild.exe ./LiteXLoader/LiteXLoader.sln -property:Configuration=Lua
+        shell: bash
+
+      - name: MkDirs
+        run: |
+          mkdir D:/build
+        shell: bash
+
+      - name: Copy Files
+        run: |
+          cp -rf ./RELEASE/. D:/build
+          rm -f D:/build/.gitignore
+
+          cp -a ./LiteXLoader/Release/*.dll D:/build
+          cp -a ./LiteXLoader/Release/*.pdb D:/build/lib
+          cp -a ./LiteXLoader/BaseLib/BaseLib.js D:/build/lib
+          cp -a ./LiteXLoader/BaseLib/BaseLib.lua D:/build/lib
+        shell: bash
+
+      - name: Upload BuildFiles
+        uses: actions/upload-artifact@v2
+        with:
+          name: LiteXLoader
+          path: D:/build
+
+  Clean:
+    runs-on: ubuntu-latest
+    needs: [Build_LiteXLoader-js, Build_LiteXLoader-lua]
+    steps:
+      - uses: geekyeggo/delete-artifact@v1
+        with:
+          name: libs

@@ -158,7 +158,12 @@ bool inline IsInstanceOf(Local<Value> v)
 bool CheckIsFloat(const Local<Value>& num);
 
 // 序列化
-void PrintValue(std::ostream &out, Local<Value> v);
+template <typename T>
+void PrintValue(T &out, Local<Value> v);
+
+template void PrintValue(std::ostream & out, Local<Value> v);
+template void PrintValue(Logger::OutputStream & out, Local<Value> v);
+
 std::string ValueToString(Local<Value> v);
 
 // Json 序列化 反序列化

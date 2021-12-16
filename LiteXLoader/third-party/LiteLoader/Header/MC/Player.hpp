@@ -4,6 +4,7 @@
 #include "../Global.h"
 #include "Actor.hpp"
 #include "Mob.hpp"
+#include <functional>
 
 #define BEFORE_EXTRA
 // Add include headers & pre-declares
@@ -73,6 +74,11 @@ public:
     LIAPI bool sendBossEventPacket(BossEvent type, string name, float percent, BossEventColour colour, int overlay = 0);
     LIAPI bool sendCommandRequestPacket(const string& cmd);
     LIAPI bool sendTextTalkPacket(const string& msg);
+
+    LIAPI bool sendRawFormPacket(unsigned formId, const string& data);
+    LIAPI bool sendSimpleFormPacket(const string& title, const string& content, const vector<string>& buttons, const std::vector<std::string>& images, std::function<void(int)> callback);
+    LIAPI bool sendModalFormPacket(const string& title, const string& content, const string& button1, const string& button2, std::function<void(bool)> callback);
+    LIAPI bool sendCustomFormPacket(const std::string& data, std::function<void(string)> callback);
 
     LIAPI static bool isValid(Player* player);
 

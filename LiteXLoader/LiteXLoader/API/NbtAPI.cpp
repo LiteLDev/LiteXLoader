@@ -170,6 +170,7 @@ ClassDefine<NbtCompoundClass> NbtCompoundClassBuilder =
         .instanceFunction("toObject", &NbtCompoundClass::toObject)
         .instanceFunction("toSNBT", &NbtCompoundClass::toSNBT)
         .instanceFunction("toBinaryNBT", &NbtCompoundClass::toBinaryNBT)
+        .instanceFunction("destroy", &NbtCompoundClass::destroy)
         .build();
 
 
@@ -1881,6 +1882,11 @@ Local<Value> NbtCompoundClass::toString(const Arguments& args)
         return String::newString(nbt->toJson(args.size() >= 1 ? args[0].toInt() : -1));
     }
     CATCH("Fail in NBTtoJson!");
+}
+
+Local<Value> NbtCompoundClass::destroy(const Arguments& args)
+{
+    return Boolean::newBoolean(true);
 }
 
 //////////////////// APIs ////////////////////

@@ -15,6 +15,8 @@
 	#define LXL_PLUGINS_SUFFIX ".lua"
 #endif
 
+#define LXL_BACKEND_TYPE_COUNT 2
+
 // 插件注册信息
 #if defined(SCRIPTX_LANG_JAVASCRIPT)
 	#define LXL_LOADER_NAME "LiteXLoader-Js"

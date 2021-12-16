@@ -25,8 +25,8 @@
 using namespace std;
 
 //////////////////// APIs ////////////////////
-
-void PrintValue(std::ostream &out, Local<Value> v)
+template <typename T>
+void PrintValue(T &out, Local<Value> v)
 {
     switch(v.getKind())
     {
@@ -165,7 +165,7 @@ void PrintValue(std::ostream &out, Local<Value> v)
         case ValueKind::kByteBuffer:
         {
             Local<ByteBuffer> bytes = v.asByteBuffer();
-            out.write((const char*)bytes.getRawBytes(),bytes.byteLength());
+            out << ((const char*)bytes.getRawBytes(),bytes.byteLength());
             break;
         }
         case ValueKind::kFunction:
@@ -180,6 +180,7 @@ void PrintValue(std::ostream &out, Local<Value> v)
         }
     }
 }
+
 
 std::string ValueToString(Local<Value> v)
 {
@@ -341,6 +342,8 @@ Local<Value> JsonToValue(std::string jsonStr)
     {
         if (jsonStr.empty())
             return String::newString("");
+        if (jsonStr.front() == '\"' && jsonStr.back() == '\"')
+            return String::newString(jsonStr.substr(1,jsonStr.size()-2));
         auto j = fifo_json::parse(jsonStr);
         return JsonToValue(j);
     }

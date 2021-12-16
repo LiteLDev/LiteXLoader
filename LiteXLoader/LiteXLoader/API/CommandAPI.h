@@ -12,7 +12,7 @@ std::vector<std::string> SplitCmdLine(const std::string& paras);
 // 注册LXL内置命令
 void RegisterBuiltinCmds();
 // 命令回调查询
-std::string LxlFindCmdReg(bool isPlayerCmd, const std::string& cmd, std::vector<std::string>& receiveParas);
+std::string LxlFindCmdReg(bool isPlayerCmd, const std::string& cmd, std::vector<std::string>& receiveParas, bool* fromOtherEngine);
 // 删除指定引擎的所有命令
 bool LxlRemoveCmdRegister(script::ScriptEngine* engine);
 

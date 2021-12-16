@@ -20,7 +20,7 @@ using namespace std;
 bool RegisterCmd(const string& cmd, const string& describe, int cmdLevel)
 {
     ::Global<CommandRegistry>->registerCommand(cmd, describe.c_str(), (CommandPermissionLevel)cmdLevel, { (CommandFlagValue)0 },
-        { (CommandFlagValue)0x40 });
+        { (CommandFlagValue)0x80 });
     return true;
 }
 
@@ -59,10 +59,16 @@ void LxlRegisterNewCmd(bool isPlayerCmd, string cmd, const string& describe, int
     if (cmd[0] == '/')
         cmd = cmd.erase(0, 1);
 
-    if(isPlayerCmd)
+    if (isPlayerCmd)
+    {
         localShareData->playerCmdCallbacks[cmd] = { EngineScope::currentEngine(),level,script::Global<Function>(func) };
+        globalShareData->playerRegisteredCmd[cmd] = LXL_SCRIPT_LANG_TYPE;
+    }
     else
+    {
         localShareData->consoleCmdCallbacks[cmd] = { EngineScope::currentEngine(),level,script::Global<Function>(func) };
+        globalShareData->consoleRegisteredCmd[cmd] = LXL_SCRIPT_LANG_TYPE;
+    }
 
     //延迟注册
     if (isCmdRegisterEnabled)
@@ -213,7 +219,6 @@ bool ProcessDebugEngine(const string& cmd)
         {
             if (cmd == "stop")
             {
-                logger.warn("请先退出Debug实时调试模式再使用stop！");
                 return true;
             }
             else
@@ -242,8 +247,24 @@ void ProcessStopServer(const string& cmd)
     }
 }
 
-string LxlFindCmdReg(bool isPlayerCmd, const string& cmd, vector<string> &receiveParas)
+string LxlFindCmdReg(bool isPlayerCmd, const string& cmd, vector<string>& receiveParas, bool *fromOtherEngine)
 {
+    std::unordered_map<std::string, std::string>& registeredMap =
+        isPlayerCmd ? globalShareData->playerRegisteredCmd : globalShareData->consoleRegisteredCmd;
+    for (auto& [prefix,fromEngine] : registeredMap)
+    {
+        if (cmd == prefix || (cmd.find(prefix) == 0 && cmd[prefix.size()] == ' '))
+            //如果命令与注册前缀全匹配，或者目标前缀后面为空格
+        {
+            //Matched
+            if (fromEngine != LXL_SCRIPT_LANG_TYPE)
+            {
+                *fromOtherEngine = true;
+                return string();
+            }
+        }
+    }
+
     std::map<std::string, CmdCallbackData, CmdCallbackMapCmp>& cmdMap =
         isPlayerCmd ? localShareData->playerCmdCallbacks : localShareData->consoleCmdCallbacks;
 

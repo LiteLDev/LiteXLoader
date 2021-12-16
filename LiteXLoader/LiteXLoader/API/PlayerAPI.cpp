@@ -270,7 +270,7 @@ Local<Value> PlayerClass::getBlockPos()
         if (!player)
             return Local<Value>();
 
-        return IntPos::newPos(player->getBlockPos());
+        return IntPos::newPos(player->getBlockPos(),player->getDimensionId());
     }
     CATCH("Fail in getPlayerBlockPos!")
 }
@@ -1021,16 +1021,36 @@ Local<Value> PlayerClass::sendSimpleForm(const Arguments& args)
         for (int i = 0; i < textsArr.size(); ++i)
         {
             texts.push_back(textsArr.get(i).toStr());
+        }
+        for (int i = 0; i < imagesArr.size(); ++i)
+        {
             images.push_back(imagesArr.get(i).toStr());
         }
 
-        int formId = SendSimpleForm(player, args[0].toStr(), args[1].toStr(), texts, images);
+        player->sendSimpleFormPacket(args[0].toStr(), args[1].toStr(), texts, images,
+            [id{ player->getUniqueID() }, engine{ EngineScope::currentEngine() },
+            callback{ script::Global(args[4].asFunction()) }]
+        (int chosen)
+        {
+            Player* pl = Level::getPlayer(id);
+            if (!pl)
+                return;
 
-        
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].engine = EngineScope::currentEngine();
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].func = args[4].asFunction();
+            EngineScope scope(engine);
+            try
+            {
+                callback.get().call({}, PlayerClass::newPlayer(pl),
+                    chosen >= 0 ? Number::newNumber(chosen) : Local<Value>());
+            }
+            catch (const Exception& e)
+            {
+                logger.error("Fail in form callback!");
+                logger.error("In Plugin: " + ENGINE_OWN_DATA()->pluginName);
+                PrintException(e);
+            }
+        });
 
-        return Number::newNumber(formId);
+        return Number::newNumber(1);
     }
     CATCH("Fail in sendSimpleForm!");
 }
@@ -1049,11 +1069,30 @@ Local<Value> PlayerClass::sendModalForm(const Arguments& args)
         if (!player)
             return Local<Value>();
 
-        int formId = SendModalForm(player, args[0].toStr(), args[1].toStr(), args[2].toStr(), args[3].toStr());
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].engine = EngineScope::currentEngine();
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].func = args[4].asFunction();
+        player->sendModalFormPacket(args[0].toStr(), args[1].toStr(), args[2].toStr(), args[3].toStr(),
+            [id{ player->getUniqueID() }, engine{ EngineScope::currentEngine() },
+            callback{ script::Global(args[4].asFunction()) }]
+        (bool chosen)
+        {
+            Player* pl = Level::getPlayer(id);
+            if (!pl)
+                return;
 
-        return Number::newNumber(formId);
+            EngineScope scope(engine);
+            try
+            {
+                callback.get().call({}, PlayerClass::newPlayer(pl),
+                    chosen >= 0 ? Number::newNumber(chosen) : Local<Value>());
+            }
+            catch (const Exception& e)
+            {
+                logger.error("Fail in form callback!");
+                logger.error("In Plugin: " + ENGINE_OWN_DATA()->pluginName);
+                PrintException(e);
+            }
+        });
+
+        return Number::newNumber(2);
     }
     CATCH("Fail in sendModalForm!");
 }
@@ -1070,12 +1109,30 @@ Local<Value> PlayerClass::sendCustomForm(const Arguments& args)
             return Local<Value>();
 
         string data = fifo_json::parse(args[0].toStr()).dump();
-        int formId = SendCustomForm(player, data);
-        
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].engine = EngineScope::currentEngine();
-        ENGINE_OWN_DATA()->formCallbacks[(unsigned)formId].func = args[1].asFunction();
-        
-        return Number::newNumber(formId);
+
+        player->sendCustomFormPacket(data,
+            [id{ player->getUniqueID() }, engine{ EngineScope::currentEngine() },
+            callback{ script::Global(args[1].asFunction()) }]
+            (string result)
+        {
+            Player* pl = Level::getPlayer(id);
+            if (!pl)
+                return;
+
+            EngineScope scope(engine);
+            try
+            {
+                callback.get().call({}, PlayerClass::newPlayer(pl),
+                    result != "null" ? JsonToValue(result) : Local<Value>());
+            }
+            catch (const Exception& e)
+            {
+                logger.error("Fail in form callback!");
+                logger.error("In Plugin: " + ENGINE_OWN_DATA()->pluginName);
+                PrintException(e);
+            }
+        });
+        return Number::newNumber(3);
     }
     catch (const fifo_json::exception& e)
     {

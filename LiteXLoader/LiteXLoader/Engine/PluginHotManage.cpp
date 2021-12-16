@@ -5,97 +5,176 @@
 #include "LoaderHelper.h"
 #include "MessageSystem.h"
 #include "GlobalShareData.h"
+#include <Engine/OperationCount.h>
+#include <Utils/StringHelper.h>
+#include <Utils/Hash.h>
 #include <AutoUpgrade.h>
 #include <Configs.h>
 #include <Version.h>
 #include <string>
 #include <thread>
 using namespace std;
+#define H do_hash
 
 void HotManageMessageCallback(ModuleMessage& msg)
 {
-    string cmd = msg.getData();
-    
-    auto cmdList = SplitCmdLine(cmd);
-    if (cmdList.size() <= 1) {
-        logger.error("Bad Command!");
-        return;
-    }
-    if (cmdList[1] == "list")
-    {
-        //list
-        auto list = LxlListLocalAllPlugins();
-
-        //多线程锁
-        // ======================= Rewrite here =======================
-        //lock_guard<mutex> lock(globalShareData->hotManageLock);
-
-        for (auto& name : list)
-            logger.info(name);
-    }
-    else if (cmdList[1] == "load" && cmdList.size() == 3)
-    {
-        //load
-        if (!filesystem::exists(cmdList[2]))
-            logger.error("Plugin no found!");
-        if (filesystem::path(cmdList[2]).extension() == LXL_PLUGINS_SUFFIX)
-            LxlLoadPlugin(cmdList[2], true);
-    }
-    else if (cmdList[1] == "unload" && cmdList.size() == 3)
-    {
-        //unload
-        if (filesystem::path(cmdList[2]).extension() == LXL_PLUGINS_SUFFIX)
-            if (LxlUnloadPlugin(cmdList[2]) == "")
-                logger.error("Plugin no found!");
-    }
-    else if (cmdList[1] == "reload")
-    {
-        if (cmdList.size() == 2)
-        {
-            //reload all
-            LxlReloadAllPlugins();
-        }
-        else if (cmdList.size() == 3)
-        {
-            //reload one
-            if (filesystem::path(cmdList[2]).extension() == LXL_PLUGINS_SUFFIX)
-                if (!LxlReloadPlugin(cmdList[2]))
-                    logger.error("Plugin no found!");
-        }
-        else
-            logger.error("Bad Command!");
-    }
-    else
-        logger.error("Bad Command!");
+    //Remove
+    ;
 }
 
 bool ProcessHotManageCmd(const std::string& cmd)
 {
-    if (cmd.find("lxl") != 0)
+    if (cmd.find("lxl ") != 0)
         return true;
-    if (cmd == "lxl version")
+
+    auto cmdList = SplitCmdLine(cmd);
+    if (cmdList.size() <= 1)
     {
-        printf("LiteXLoader v%d.%d.%d\n", LXL_VERSION_MAJOR, LXL_VERSION_MINOR, LXL_VERSION_REVISION);
+        logger.error("Command not found! Check your input again.");
         return false;
     }
-    else if (cmd == "lxl update")
+
+    switch (H(cmdList[1].c_str()))
     {
-        std::thread([]
-        {
-            CheckAutoUpdate(true);
-        }).detach();
-        return false;
+    case H("version"):
+        logger.info("LiteXLoader-{} v{}.{}.{}", LXL_SCRIPT_LANG_TYPE, LXL_VERSION_MAJOR, LXL_VERSION_MINOR, LXL_VERSION_REVISION);
+        break;
+
+    case H("list"):
+    {
+        logger.info("=== LiteXLoader-{} Plugins ===", LXL_SCRIPT_LANG_TYPE);
+        auto list = LxlListLocalAllPlugins();
+        for (auto& name : list)
+            logger.info("{}", name);
+        break;
     }
-    else if (cmd == "lxl update force")
+
+    case H("update"):
     {
-        std::thread([]
+        if (cmdList.size() == 3 && cmdList[2] == "force")
         {
-            CheckAutoUpdate(true,true);
-        }).detach();
-        return false;
+            //Force Update
+            OperationCount cnt("lxlcommand_update_force");
+            if (cnt.hasReachMaxBackendCount())
+            {
+                cnt.clear();
+                std::thread([]
+                {
+                    CheckAutoUpdate(true, true);
+                }).detach();
+            }
+        }
+        else if(cmdList.size() == 2)
+        {
+            //Common Update
+            OperationCount cnt("lxlcommand_update");
+            if (cnt.hasReachCount(LXL_BACKEND_TYPE_COUNT))
+            {
+                cnt.clear();
+                std::thread([]
+                    {
+                        CheckAutoUpdate(true);
+                    }).detach();
+            }
+        }
+        else
+            logger.error("Bad Command! Check your input again.");
+        break;
     }
     
-    ModuleMessage msg(ModuleMessage::MessageType::LxlCommand, cmd);
-    ModuleMessage::broadcastAll(msg);
+    case H("load"):
+    {
+        if (cmdList.size() == 3)
+        {
+            OperationCount cnt("lxlcommand_load");
+            OperationCount succeeded("lxlcommand_load_succeeded", false);
+
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            {
+                if (!filesystem::exists(cmdList[2]))
+                    logger.error("Plugin no found! Check the path you input again.");
+                else if (LxlLoadPlugin(cmdList[2], true))
+                    succeeded.done();
+            }
+
+            if (cnt.hasReachMaxBackendCount())
+            {
+                if(succeeded.get() == 0)
+                    logger.error("Fail to load any plugin at <" + cmdList[2] + "> !");
+                cnt.clear();
+                succeeded.clear();
+            }
+        }
+        else
+            logger.error("Bad Command! Check your input again.");
+        break;
+    }
+
+    case H("unload"):
+    {
+        if (cmdList.size() == 3)
+        {
+            OperationCount cnt("lxlcommand_unload");
+            OperationCount succeeded("lxlcommand_unload_succeeded", false);
+
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            {
+                if (LxlUnloadPlugin(cmdList[2]) != "")
+                    succeeded.done();
+            }
+
+            if (cnt.hasReachMaxBackendCount())
+            {
+                if (succeeded.get() == 0)
+                {
+                    logger.error("Fail to unload any plugin named <" + cmdList[2] + ">!");
+                    logger.error("Use command \"lxl list\" to show plugins loaded currently.");
+                }
+                cnt.clear();
+                succeeded.clear();
+            }
+        }
+        else
+            logger.error("Bad Command! Check your input again.");
+        break;
+    }
+
+    case H("reload"):
+    {
+        if (cmdList.size() == 3)
+        {
+            //Reload specific plugin
+            OperationCount cnt("lxlcommand_reload");
+            OperationCount succeeded("lxlcommand_unload_succeeded", false);
+
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            {
+                if (!LxlReloadPlugin(cmdList[2]))
+                    logger.error("Fail to reload plugin <" + cmdList[2] + ">!");
+                else
+                    succeeded.done();
+            }
+
+            if (cnt.hasReachMaxBackendCount())
+            {
+                if (succeeded.get() == 0)
+                    logger.error("Fail to reload any plugin named <" + cmdList[2] + "> !");
+                cnt.clear();
+                succeeded.clear();
+            }
+        }
+        else
+        {
+            //Reload All
+            LxlReloadAllPlugins();
+            logger.info("All plugins reloaded.", LXL_SCRIPT_LANG_TYPE);
+        }
+        break;
+    }
+
+    default:
+        logger.error("Command not found! Check your input again.");
+        break;
+    }
     return false;
 }

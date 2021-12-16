@@ -139,6 +139,9 @@
     <ClCompile Include="AutoUpgrade.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\OperationCount.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API\BaseAPI.h">
@@ -263,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="Tools\JsonHelper.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\OperationCount.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
