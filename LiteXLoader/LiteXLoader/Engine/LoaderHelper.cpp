@@ -254,6 +254,9 @@ string LxlUnloadPlugin(const std::string& name)
             break;
         }
     }
+    string pluginCache = LXL_PLUGINS_CACHE + name.substr(0, name.rfind("."));
+    if (filesystem::exists(pluginCache))
+        filesystem::remove_all(pluginCache);
     return unloadedPath;
 }
 
@@ -317,6 +320,11 @@ string UnzipPluginPack(const std::string& filePath)
     };
 
     string pluginName = std::filesystem::path(filePath).filename().u8string();
+    for (auto plugin : globalShareData->pluginsList)
+    {
+        if (pluginName == plugin)
+            return "";
+    }
     pluginName = pluginName.substr(0, pluginName.rfind("."));
     try
     {
