@@ -320,12 +320,12 @@ string UnzipPluginPack(const std::string& filePath)
     };
 
     string pluginName = std::filesystem::path(filePath).filename().u8string();
+    pluginName = pluginName.substr(0, pluginName.rfind("."));
     for (auto plugin : globalShareData->pluginsList)
     {
-        if (pluginName == plugin)
+        if (pluginName + LXL_PLUGINS_SUFFIX == plugin)
             return "";
     }
-    pluginName = pluginName.substr(0, pluginName.rfind("."));
     try
     {
         
