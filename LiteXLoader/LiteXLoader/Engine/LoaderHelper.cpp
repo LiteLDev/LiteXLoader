@@ -78,13 +78,13 @@ void RemoteLoadReturnCallback(ModuleMessage& msg)
 }
 
 //加载插件
-bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
+bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad, bool isPackage)
 {
     if (filePath == LXL_DEBUG_ENGINE_NAME)
         return true;
 
     string suffix = filesystem::path(filePath).extension().u8string();
-    if (suffix != LXL_PLUGINS_SUFFIX)
+    if (suffix != LXL_PLUGINS_SUFFIX && suffix != ".lxl")
     {
         //Remote Load
         logger.debug("Remote Load begin");
@@ -141,7 +141,25 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
 
     try
     {
-        std::string scripts = ReadFileFrom(filePath);
+        std::string scripts;
+        if (isPackage)
+        {
+            std::string _filePath = UnzipPluginPack(filePath);
+            if (_filePath != "")
+            {
+                _filePath += (pluginName.substr(0, pluginName.rfind(".")) + LXL_PLUGINS_SUFFIX);
+                scripts = ReadFileFrom(_filePath);
+            }
+            else
+            {
+                logger.error("Fail to unzip" + filePath);
+                return false;
+            }
+        }
+        else
+        {
+            scripts = ReadFileFrom(filePath);
+        }
 
         //启动引擎
         ScriptEngine* engine = NewEngine();
@@ -151,6 +169,7 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
         //setData
         ENGINE_OWN_DATA()->pluginName = pluginName;
         ENGINE_OWN_DATA()->pluginPath = filePath;
+        ENGINE_OWN_DATA()->isPackage = isPackage;
         ENGINE_OWN_DATA()->logger.title = SplitStrWithPattern(pluginName,"\.")[0];
 
         //绑定API
@@ -239,6 +258,14 @@ string LxlUnloadPlugin(const std::string& name)
         if (ENGINE_GET_DATA(engine)->pluginName == name)
         {
             unloadedPath = ENGINE_GET_DATA(engine)->pluginPath;
+            if (ENGINE_GET_DATA(engine)->isPackage)
+            {
+                string pluginName = ENGINE_GET_DATA(engine)->pluginName;
+                pluginName = pluginName.substr(0, pluginName.rfind("."));
+                string pluginCache = LXL_PLUGINS_CACHE + pluginName;
+                if (filesystem::exists(pluginCache))
+                    filesystem::remove_all(pluginCache);
+            }
 
             LxlCallEventsOnHotUnload(engine);
             RemoveFromGlobalPluginsList(name);
@@ -254,9 +281,6 @@ string LxlUnloadPlugin(const std::string& name)
             break;
         }
     }
-    string pluginCache = LXL_PLUGINS_CACHE + name.substr(0, name.rfind("."));
-    if (filesystem::exists(pluginCache))
-        filesystem::remove_all(pluginCache);
     return unloadedPath;
 }
 
@@ -269,7 +293,8 @@ bool LxlReloadPlugin(const std::string& name)
     string unloadedPath = LxlUnloadPlugin(name);
     if (unloadedPath.empty())
         return false;
-    return LxlLoadPlugin(unloadedPath,true);
+    bool isPackage = (filesystem::path(unloadedPath).extension() == ".lxl");
+    return LxlLoadPlugin(unloadedPath, true, isPackage);
 }
 
 //重载全部插件
@@ -321,14 +346,15 @@ string UnzipPluginPack(const std::string& filePath)
 
     string pluginName = std::filesystem::path(filePath).filename().u8string();
     pluginName = pluginName.substr(0, pluginName.rfind("."));
+    //防止重复解压
     for (auto plugin : globalShareData->pluginsList)
     {
-        if (pluginName + LXL_PLUGINS_SUFFIX == plugin)
+        plugin = plugin.substr(0, plugin.rfind("."));
+        if (pluginName == plugin)
             return "";
     }
     try
     {
-        
         HZIP hz = OpenZip(toWchar(filePath), NULL);
         SetUnzipBaseDir(hz, toWchar(LXL_PLUGINS_CACHE + pluginName));
         ZIPENTRY ze; GetZipItem(hz, -1, &ze); 
@@ -340,11 +366,17 @@ string UnzipPluginPack(const std::string& filePath)
         }
         CloseZip(hz);
 
-        return pluginName;
+        return LXL_PLUGINS_CACHE + pluginName + "/";
     }
-    catch (const std::exception&)
+    catch (const std::exception& e)
     {
-        ERROR("Fail to load " + pluginName +"!");
+        logger.error("Fail to load " + pluginName +"!");
+        logger.error(e.what());
+        return "";
+    }
+    catch (...)
+    {
+        logger.error("Fail to load " + pluginName + "!");
         return "";
     }
 }

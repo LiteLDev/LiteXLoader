@@ -28,7 +28,7 @@ SOFTWARE.
 
     let coreModules = new Map([]);
 
-    let basePath = 'plugins/';
+    let basePath = File.getCurrentDirectory();
 
     let utilPath = {
         normalize(path) {
@@ -299,11 +299,7 @@ SOFTWARE.
         };
     }
 
-    function cjsRequire(id, base_path) {
-        if (base_path) {
-            basePath = basePath;
-            currentModule.path = basePath;
-        }
+    function cjsRequire(id) {
         let parrentModule = currentModule;
         let {path, content} = resolveID(id);
         if(cjsRequire.cache[path] !== undefined) {
@@ -397,3 +393,8 @@ DirectionAngle.prototype.valueOf = function()
 {
     return this.toFacing();
 }
+
+/*
+
+*/
+const __BasePath__ = file.getCurrentDirectory();

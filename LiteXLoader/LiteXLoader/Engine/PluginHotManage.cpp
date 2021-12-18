@@ -89,11 +89,12 @@ bool ProcessHotManageCmd(const std::string& cmd)
             OperationCount cnt("lxlcommand_load");
             OperationCount succeeded("lxlcommand_load_succeeded", false);
 
-            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            bool isPackage = EndsWith(cmdList[2], ".lxl");
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX) || isPackage)
             {
                 if (!filesystem::exists(cmdList[2]))
                     logger.error("Plugin no found! Check the path you input again.");
-                else if (LxlLoadPlugin(cmdList[2], true))
+                else if (LxlLoadPlugin(cmdList[2], true, isPackage))
                     succeeded.done();
             }
 
@@ -117,7 +118,7 @@ bool ProcessHotManageCmd(const std::string& cmd)
             OperationCount cnt("lxlcommand_unload");
             OperationCount succeeded("lxlcommand_unload_succeeded", false);
 
-            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX) || EndsWith(cmdList[2], ".lxl"))
             {
                 if (LxlUnloadPlugin(cmdList[2]) != "")
                     succeeded.done();
@@ -147,7 +148,10 @@ bool ProcessHotManageCmd(const std::string& cmd)
             OperationCount cnt("lxlcommand_reload");
             OperationCount succeeded("lxlcommand_unload_succeeded", false);
 
-            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX))
+            if (succeeded.get() == 1)
+                break;
+
+            if (EndsWith(cmdList[2], LXL_PLUGINS_SUFFIX) || EndsWith(cmdList[2],".lxl"))
             {
                 if (!LxlReloadPlugin(cmdList[2]))
                     logger.error("Fail to reload plugin <" + cmdList[2] + ">!");
