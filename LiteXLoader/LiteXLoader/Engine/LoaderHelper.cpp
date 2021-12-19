@@ -147,7 +147,9 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad, bool isPackage)
             std::string _filePath = UnzipPluginPack(filePath);
             if (_filePath != "")
             {
-                _filePath += (pluginName.substr(0, pluginName.rfind(".")) + LXL_PLUGINS_SUFFIX);
+                std::string entry = filesystem::exists(_filePath + "main" + LXL_PLUGINS_SUFFIX) ? 
+                    "main" : pluginName.substr(0, pluginName.rfind("."));
+                _filePath += entry + LXL_PLUGINS_SUFFIX;
                 scripts = ReadFileFrom(_filePath);
             }
             else
@@ -329,7 +331,7 @@ vector<string> LxlListGlocalAllPlugins()
 //解压.lxl包
 string UnzipPluginPack(const std::string& filePath)
 {
-    //将路径转为TCHAR类型
+    //将路径转为WCHAR类型
     function toWchar = [](const std::string& fp)
     {
         int iUnicode = MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), NULL, 0);
