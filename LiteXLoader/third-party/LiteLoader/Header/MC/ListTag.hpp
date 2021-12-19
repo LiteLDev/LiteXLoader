@@ -15,6 +15,7 @@ class ListTag : public Tag {
 #define AFTER_EXTRA
 // Add Member There
 std::vector<Tag*> val;
+Tag::Type elementType;
 
 public:
     inline static ListTag* create() {
@@ -29,6 +30,11 @@ public:
         if (index < size())
             return get(index);
         return nullptr;
+    }
+
+    inline Tag::Type getElementType()
+    {
+        return elementType;
     }
 
     inline size_t getSize() { return val.size(); }
@@ -50,9 +56,9 @@ public:
     LIAPI void addDouble(double v);
     LIAPI void addString(const std::string& v);
     LIAPI void addByteArray(TagMemoryChunk);
-    LIAPI void addByteArray(void* data, size_t size);
+    LIAPI void addByteArray(char data[], size_t size);
     LIAPI void addIntArray(TagMemoryChunk);
-    LIAPI void addIntArray(void* data, size_t size);
+    LIAPI void addIntArray(int data[], size_t size);
 
     inline vector<Tag*> get()
     {
@@ -73,7 +79,7 @@ public:
     /*2*/ virtual void write(class IDataOutput&) const;
     /*3*/ virtual void load(class IDataInput&);
     /*4*/ virtual std::string toString() const;
-    /*5*/ virtual int /*enum enum Tag::Type*/ getId() const;
+    /*5*/ virtual enum Tag::Type getId() const;
     /*6*/ virtual bool equals(class Tag const&) const;
     /*7*/ virtual void print(std::string const&, class PrintStream&) const;
     /*8*/ virtual std::unique_ptr<class Tag> copy() const;

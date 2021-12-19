@@ -183,7 +183,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalDependencies>$(SolutionDir)third-party\ScriptX\lib\ScriptX-Lua.lib;$(SolutionDir)third-party\Lua\lib\lua.lib;$(SolutionDir)third-party\zip_utils\lib\zip_utils.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <DelayLoadDLLs>bedrock_server.dll</DelayLoadDLLs>
     </Link>

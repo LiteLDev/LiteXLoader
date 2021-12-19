@@ -35,6 +35,8 @@
 #include <MC/HashedString.hpp>
 #include <MC/Objective.hpp>
 #include <MC/BlockInstance.hpp>
+#include <MC/Block.hpp>
+#include <MC/VanillaBlocks.hpp>
 using namespace std;
 
 
@@ -501,7 +503,7 @@ void InitEventListeners()
         IF_LISTENED(EVENT_TYPES::onContainerChange)
         {
             CallEvent(EVENT_TYPES::onContainerChange, PlayerClass::newPlayer(ev.mPlayer), BlockClass::newBlock(ev.mBlockInstance),
-                ev.mSlot, ItemClass::newItem(ev.mPerviousItemStack), ItemClass::newItem(ev.mNewItemStack));
+                ev.mSlot, ItemClass::newItem(ev.mPreviousItemStack), ItemClass::newItem(ev.mNewItemStack));
         }
         IF_LISTENED_END(EVENT_TYPES::onContainerChange);
     });
@@ -670,9 +672,9 @@ void InitEventListeners()
         IF_LISTENED(EVENT_TYPES::onExplode)
         {
             CallEvent(EVENT_TYPES::onExplode, EntityClass::newEntity(ev.mActor),
-                FloatPos::newPos(ev.mPos, ev.mDimensionId),
-                Number::newNumber(ev.mRadius), Number::newNumber(ev.mRange),
-                Boolean::newBoolean(ev.mIsDestroy), Boolean::newBoolean(ev.mIsFire));
+                FloatPos::newPos(ev.mPos, ev.mRegion->getDimensionId()),
+                Number::newNumber(ev.mRadius), Number::newNumber(ev.mMaxResistance),
+                Boolean::newBoolean(ev.mBreaking), Boolean::newBoolean(ev.mFire));
         }
         IF_LISTENED_END(EVENT_TYPES::onExplode);
     });
@@ -696,12 +698,25 @@ void InitEventListeners()
     });
 
     Event::BlockExplodeEvent::subscribe([](const BlockExplodeEvent& ev) {
-        IF_LISTENED(EVENT_TYPES::onBedExplode)
-        {
-            BlockInstance bl(ev.mBlockInstance);
-            CallEvent(EVENT_TYPES::onBedExplode, IntPos::newPos(bl.getPosition(), bl.getDimensionId()));
+
+        BlockInstance bl(ev.mBlockInstance);
+        if(bl.getBlock() == VanillaBlocks::mRespawnAnchor){
+            IF_LISTENED(EVENT_TYPES::onRespawnAnchorExplode)
+            {
+                CallEvent(EVENT_TYPES::onRespawnAnchorExplode, IntPos::newPos(bl.getPosition(), bl.getDimensionId()),
+                    Local<Value>());
+            }
+            IF_LISTENED_END(EVENT_TYPES::onRespawnAnchorExplode);
         }
-        IF_LISTENED_END(EVENT_TYPES::onBedExplode);
+        else
+        {
+            IF_LISTENED(EVENT_TYPES::onBedExplode)
+            {
+                CallEvent(EVENT_TYPES::onBedExplode, IntPos::newPos(bl.getPosition(), bl.getDimensionId()));
+            }
+            IF_LISTENED_END(EVENT_TYPES::onBedExplode);
+        }
+
     });
 
     Event::RedStoneUpdateEvent::subscribe([](const RedStoneUpdateEvent& ev) {
@@ -713,15 +728,6 @@ void InitEventListeners()
         IF_LISTENED_END(EVENT_TYPES::onRedStoneUpdate);
     });
 
-    Event::RespawnAnchorExplodeEvent::subscribe([](const RespawnAnchorExplodeEvent& ev) {
-        IF_LISTENED(EVENT_TYPES::onRespawnAnchorExplode)
-        {
-            BlockInstance bl(ev.mBlockInstance);
-            CallEvent(EVENT_TYPES::onRespawnAnchorExplode, IntPos::newPos(bl.getPosition(), bl.getDimensionId()),
-                PlayerClass::newPlayer(ev.mPlayer));
-        }
-        IF_LISTENED_END(EVENT_TYPES::onRespawnAnchorExplode);
-    });
 
     Event::WitherBossDestroyEvent::subscribe([](const WitherBossDestroyEvent& ev) {
         IF_LISTENED(EVENT_TYPES::onWitherBossDestroy)
@@ -828,6 +834,7 @@ void InitEventListeners()
                 EntityClass::newEntity(ev.mExplodeSource));
         }
         IF_LISTENED_END(EVENT_TYPES::onBlockExploded);
+
     });
 
     Event::BlockInteractedEvent::subscribe([](const BlockInteractedEvent& ev) {
@@ -894,7 +901,7 @@ void InitEventListeners()
     Event::BlockChangedEvent::subscribe([](const BlockChangedEvent& ev) {
         IF_LISTENED(EVENT_TYPES::onBlockChanged)
         {
-            CallEvent(EVENT_TYPES::onBlockChanged, BlockClass::newBlock(ev.mPerviousBlockInstance),
+            CallEvent(EVENT_TYPES::onBlockChanged, BlockClass::newBlock(ev.mPreviousBlockInstance),
                 BlockClass::newBlock(ev.mNewBlockInstance));
         }
         IF_LISTENED_END(EVENT_TYPES::onBlockChanged);

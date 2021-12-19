@@ -377,9 +377,9 @@ Local<Value> PlayerClass::getDirection()
         Player* player = get();
         if (!player)
             return Local<Value>();
-        
-        auto vec = ((Actor*)player)->getDirection();
-        return DirectionAngle::newAngle(vec->x, vec->z);
+
+        Vec2 rot = player->getRotation();
+        return DirectionAngle::newAngle(rot.x, rot.y);
     }
     CATCH("Fail in getDirection!")
 }
@@ -563,7 +563,7 @@ Local<Value> PlayerClass::setPermLevel(const Arguments& args)
         int newPerm = args[0].asNumber().toInt32();
         if (newPerm >= 0 || newPerm <= 4)
         {
-            player->setPermissions(newPerm);
+            player->setPermissions((CommandPermissionLevel)newPerm);
             res = true;
         }
         return Boolean::newBoolean(res);
@@ -585,7 +585,7 @@ Local<Value> PlayerClass::setGameMode(const Arguments& args)
         int newMode = args[0].asNumber().toInt32();
         if (newMode >= 0 || newMode <= 3)
         {
-            player->setPlayerGameType(newMode);
+            player->setPlayerGameType((GameType)newMode);
             res = true;
         }
         return Boolean::newBoolean(res);

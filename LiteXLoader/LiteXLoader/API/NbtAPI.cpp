@@ -839,7 +839,7 @@ Local<Value> NbtByteArrayClass::get(const Arguments& args)
 {
     try {
         auto& data = nbt->value();
-        return ByteBuffer::newByteBuffer(*data.data, data.size);
+        return ByteBuffer::newByteBuffer(data.data.get(), data.size);
     }
     CATCH("Fail in NbtValueGet!")
 }
@@ -1669,7 +1669,7 @@ Local<Value> NbtCompoundClass::setByteArray(const Arguments& args)
         auto key = args[0].toStr();
         auto data = args[1].asByteBuffer();
 
-        nbt->putByteArray(key, data.getRawBytes(), data.byteLength());
+        nbt->putByteArray(key, (char*)data.getRawBytes(), data.byteLength());
         return this->getScriptObject();
     }
     CATCH("Fail in NBT SetString!");

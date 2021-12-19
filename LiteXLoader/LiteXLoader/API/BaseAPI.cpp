@@ -2,6 +2,7 @@
 #include "APIHelp.h"
 #include <Global.hpp>
 #include <MC/BlockSource.hpp>
+#include <MC/Facing.hpp>
 #include <ServerAPI.h>
 #include "McAPI.h"
 #include <cmath>
@@ -182,18 +183,23 @@ DirectionAngle* DirectionAngle::create(const Arguments& args)
 
 Local<Value> DirectionAngle::toFacing()
 {
-    int yaw_u = yaw + 180;
-
-    if (yaw_u > 135 && yaw_u < 225)
-        return Number::newNumber(0);
-    if (yaw_u >= 225 && yaw_u < 315)
-        return Number::newNumber(1);
-    if ((yaw_u >= 315 && yaw_u <= 359) || (yaw_u >= 1 && yaw_u <= 45))
-        return Number::newNumber(2);
-    if (yaw_u > 45 && yaw_u <= 135)
-        return Number::newNumber(3);
-
-    return Number::newNumber(-1);
+    int facing = -1;
+    switch (Facing::convertYRotationToFacingDirection(yaw))
+    {
+        case 2:
+            facing = 0;
+            break;
+        case 3:
+            facing = 2;
+            break;
+        case 4:
+            facing = 3;
+            break;
+        case 5:
+            facing = 1;
+            break;
+    }
+    return Number::newNumber(facing);
 }
 
 Local<Object> DirectionAngle::newAngle(float pitch, float yaw)

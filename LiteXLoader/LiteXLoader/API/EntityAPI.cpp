@@ -249,7 +249,7 @@ Local<Value> EntityClass::getDirection()
             return Local<Value>();
 
         Vec2 *vec = entity->getDirection();
-        return DirectionAngle::newAngle(vec->x, vec->z); 
+        return DirectionAngle::newAngle(vec->x, vec->y); 
     }
     CATCH("Fail in getDirection!")
 }
