@@ -141,16 +141,37 @@
 
 <br>
 
-#### `"onAttack"` - 玩家攻击实体
+#### `"onAttackEntity"` - 玩家攻击实体
 
 - 监听函数原型
   `function(player,entity)`
 - 参数：
-  - player : `Player`  
+  - player : `Player` 
     攻击实体的玩家对象
 
-  - entity : `Entity`  
+  - entity : `Entity` 
     被攻击的实体对象
+
+- 拦截事件：函数返回`false`
+
+<br>
+
+#### `"onAttackBlock"` - 玩家攻击方块
+
+- 监听函数原型
+  `function(player,block,item)`
+
+- 参数：
+
+  - player : `Player` 
+    攻击方块的玩家对象
+
+  - entity : `Block` 
+    被攻击的方块对象
+
+  - item：`Item`
+
+    手持的物品对象
 
 - 拦截事件：函数返回`false`
 

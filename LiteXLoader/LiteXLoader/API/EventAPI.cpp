@@ -46,7 +46,8 @@ using namespace std;
 enum class EVENT_TYPES : int
 {
     onPreJoin=0, onJoin, onLeft, onPlayerCmd, onChat, onPlayerDie, 
-    onRespawn, onChangeDim, onJump, onSneak, onAttack, onEat, onMove, onChangeSprinting, onSpawnProjectile,
+    onRespawn, onChangeDim, onJump, onSneak, onEat, onMove, onChangeSprinting, onSpawnProjectile,
+    onAttack, onAttackEntity, onAttackBlock,
     onFireworkShootWithCrossbow, onSetArmor, onRide, onStepOnPressurePlate,
     onUseItem, onTakeItem, onDropItem, onUseItemOn, onInventoryChange, onChangeArmorStand,
     onStartDestroyBlock, onDestroyBlock, onWitherBossDestroy, onPlaceBlock, onLiquidFlow,
@@ -71,6 +72,8 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onJump",EVENT_TYPES::onJump},
     {"onSneak",EVENT_TYPES::onSneak},
     {"onAttack",EVENT_TYPES::onAttack},
+    {"onAttackEntity",EVENT_TYPES::onAttackEntity},
+    {"onAttackBlock",EVENT_TYPES::onAttackBlock},
     {"onEat",EVENT_TYPES::onEat},
     {"onMove",EVENT_TYPES::onMove},
     {"onChangeSprinting",EVENT_TYPES::onChangeSprinting},
@@ -389,6 +392,7 @@ void EnableEventListener(int eventId)
         break;
 
     case EVENT_TYPES::onAttack:
+    case EVENT_TYPES::onAttackEntity:
         Event::PlayerAttackEvent::subscribe([](const PlayerAttackEvent& ev)
         {
             IF_LISTENED(EVENT_TYPES::onAttack)
@@ -400,6 +404,17 @@ void EnableEventListener(int eventId)
             }
             IF_LISTENED_END(EVENT_TYPES::onAttack);
         });
+        break;
+
+    case EVENT_TYPES::onAttackBlock:
+        Event::PlayerAttackBlockEvent::subscribe([](const PlayerAttackBlockEvent& ev)
+            {
+                IF_LISTENED(EVENT_TYPES::onAttackBlock)
+                {
+                    CallEvent(EVENT_TYPES::onAttackBlock, PlayerClass::newPlayer(ev.mPlayer), BlockClass::newBlock(ev.mBlockInstance), ItemClass::newItem(ev.mItemStack));
+                }
+                IF_LISTENED_END(EVENT_TYPES::onAttackBlock);
+            });
         break;
 
     case EVENT_TYPES::onPlayerDie:
