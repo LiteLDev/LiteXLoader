@@ -23,7 +23,8 @@ SOFTWARE.
 */
 (function(){
     if(typeof require != "undefined") {
-        log('require already exist');
+        // if require already exist, just exit IIFE
+        return;
     }
 
     let coreModules = new Map([]);
