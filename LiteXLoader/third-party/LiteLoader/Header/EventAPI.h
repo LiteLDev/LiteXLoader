@@ -26,7 +26,7 @@ class CommandRegistry;
 class MobEffectInstance;
 class Container;
 class WitherBoss;
-class ArmStand;
+class ArmorStand;
 class Objective;
 struct ScoreboardId;
 
@@ -490,7 +490,7 @@ public:
 
 class ArmorStandChangeEvent : public EventTemplate<ArmorStandChangeEvent> {
 public:
-    ArmStand* mArmorStand;
+    ArmorStand* mArmorStand;
     Player* mPlayer;
     int mSlot;
 };
