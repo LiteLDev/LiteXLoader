@@ -55,7 +55,7 @@ enum class EVENT_TYPES : int
     onExplode, onBlockExploded, onBedExplode, onRespawnAnchorExplode, onEntityExplode, onBlockExplode,
     onMobDie, onMobHurt, onCmdBlockExecute, onRedStoneUpdate, onProjectileHitEntity,
     onProjectileHitBlock, onBlockInteracted, onUseRespawnAnchor, onFarmLandDecay, onUseFrameBlock,
-    onPistonPush, onHopperSearchItem, onHopperPushOut, onFireSpread, onBlockChanged, onNpcCmd,
+    onPistonTryPush,  onPistonPush, onHopperSearchItem, onHopperPushOut, onFireSpread, onBlockChanged, onNpcCmd,
     onScoreChanged, onServerStarted, onConsoleCmd, onFormSelected, onConsoleOutput, onTick,
     onMoneyAdd, onMoneyReduce, onMoneyTrans, onMoneySet, onConsumeTotem, onEffectAdded, onEffectUpdated, onEffectRemoved,
     EVENT_COUNT
@@ -114,6 +114,7 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onUseRespawnAnchor",EVENT_TYPES::onUseRespawnAnchor},
     {"onFarmLandDecay",EVENT_TYPES::onFarmLandDecay},
     {"onUseFrameBlock",EVENT_TYPES::onUseFrameBlock},
+    {"onPistonTryPush",EVENT_TYPES::onPistonTryPush},
     {"onPistonPush",EVENT_TYPES::onPistonPush},
     {"onHopperSearchItem",EVENT_TYPES::onHopperSearchItem},
     {"onHopperPushOut",EVENT_TYPES::onHopperPushOut},
@@ -954,6 +955,18 @@ void EnableEventListener(int eventId)
                     EntityClass::newEntity(ev.mActor));
             }
             IF_LISTENED_END(EVENT_TYPES::onFarmLandDecay);
+        });
+        break;
+
+    case EVENT_TYPES::onPistonTryPush:
+        Event::PistonTryPushEvent::subscribe([](const PistonTryPushEvent& ev) {
+            IF_LISTENED(EVENT_TYPES::onPistonTryPush)
+            {
+                BlockInstance bl(ev.mPistonBlockInstance);
+                CallEvent(EVENT_TYPES::onPistonTryPush, IntPos::newPos(bl.getPosition(), bl.getDimensionId()),
+                    BlockClass::newBlock(ev.mTargetBlockInstance));
+            }
+            IF_LISTENED_END(EVENT_TYPES::onPistonTryPush);
         });
         break;
 
