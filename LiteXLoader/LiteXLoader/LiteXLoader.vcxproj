@@ -48,6 +48,7 @@
     <ClCompile Include="Engine\RemoteCall.cpp" />
     <ClCompile Include="Global.cpp" />
     <ClCompile Include="EconomySystem.cpp" />
+    <ClCompile Include="SafeGuardRecord.cpp" />
     <ClCompile Include="Tools\IniHelper.cpp" />
     <ClCompile Include="Tools\Utils.cpp" />
     <ClCompile Include="LiteXLoader.cpp" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Engine\TimeTaskSystem.h" />
     <ClInclude Include="Global.hpp" />
     <ClInclude Include="EconomicSystem.h" />
+    <ClInclude Include="SafeGuardRecord.h" />
     <ClInclude Include="Tools\IniHelper.h" />
     <ClInclude Include="Tools\JsonHelper.h" />
     <ClInclude Include="Tools\Utils.h" />

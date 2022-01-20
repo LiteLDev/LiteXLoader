@@ -4,6 +4,7 @@
 #include <third-party/httplib/httplib.h>
 #include <third-party/LightWebSocketClient/include/WebSocketClient.h>
 #include "NetworkAPI.h"
+#include <SafeGuardRecord.h>
 #include <string>
 #include <vector>
 using namespace std;
@@ -176,7 +177,9 @@ Local<Value> WSClientClass::connect(const Arguments& args)
     CHECK_ARG_TYPE(args[0], ValueKind::kString);
 
     try {
-        ws.Connect(args[0].toStr());
+        string target = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "ConnectToWebsocketServer", target);
+        ws.Connect(target);
         return Boolean::newBoolean(true);
     }
     catch (const std::runtime_error& e)
@@ -275,9 +278,12 @@ Local<Value> NetworkClass::httpGet(const Arguments& args)
 
     try
     {
+        string target = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "HttpGet", target);
+
         script::Global<Function> callbackFunc{ args[1].asFunction() };
 
-        return Boolean::newBoolean(HttpGet(args[0].toStr(),
+        return Boolean::newBoolean(HttpGet(target,
             [callback{ std::move(callbackFunc) }, engine{ EngineScope::currentEngine() }]
             (int status, string body)
         {
@@ -307,9 +313,12 @@ Local<Value> NetworkClass::httpPost(const Arguments& args)
 
     try
     {
+        string target = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "HttpPost", target);
+
         script::Global<Function> callbackFunc{ args[3].asFunction() };
 
-        return Boolean::newBoolean(HttpPost(args[0].toStr(), args[1].toStr(), args[2].toStr(),
+        return Boolean::newBoolean(HttpPost(target, args[1].toStr(), args[2].toStr(),
             [callback{ std::move(callbackFunc) }, engine{ EngineScope::currentEngine() }]
             (int status, string data)
         {
@@ -335,9 +344,12 @@ Local<Value> NetworkClass::httpGetSync(const Arguments& args)
     CHECK_ARG_TYPE(args[0], ValueKind::kString);
 
     try {
+        string target = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "HttpGetSync", target);
+
         int status;
         string result;
-        HttpGetSync(args[0].toStr(), &status, &result);
+        HttpGetSync(target, &status, &result);
         Local<Object> res = Object::newObject();
         res.set("status", status);
         res.set("data", result);

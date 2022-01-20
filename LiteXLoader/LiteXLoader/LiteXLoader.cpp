@@ -5,6 +5,7 @@
 #include <Engine/LocalShareData.h>
 #include <Engine/RemoteCall.h>
 #include <Engine/MessageSystem.h>
+#include <SafeGuardRecord.h>
 #include <windows.h>
 #include <string>
 #include <exception>
@@ -82,6 +83,7 @@ void entry()
     //初始化全局数据
     InitLocalShareData();
     InitGlobalShareData();
+    InitSafeGuardRecord();
 
     //初始化消息系统
     InitMessageSystem();

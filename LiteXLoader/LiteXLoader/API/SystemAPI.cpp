@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <fstream>
 #include <Tools/Utils.h>
+#include <SafeGuardRecord.h>
 
 using namespace std::filesystem;
 
@@ -28,9 +29,12 @@ Local<Value> SystemClass::cmd(const Arguments& args)
         CHECK_ARG_TYPE(args[2], ValueKind::kNumber);
 
     try {
+        string cmd = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "ExecuteSystemCommand", cmd);
+
         script::Global<Function> callbackFunc{ args[1].asFunction() };
 
-        return Boolean::newBoolean(NewProcess("cmd /c" + args[0].toStr(),
+        return Boolean::newBoolean(NewProcess("cmd /c" + cmd,
             [callback{ std::move(callbackFunc) }, engine{ EngineScope::currentEngine() }]
         (int exitCode, string output)
         {
@@ -60,9 +64,12 @@ Local<Value> SystemClass::newProcess(const Arguments& args)
         CHECK_ARG_TYPE(args[2], ValueKind::kNumber);
 
     try {
+        string process = args[0].toStr();
+        RecordOperation(ENGINE_OWN_DATA()->pluginName, "CreateNewProcess", process);
+
         script::Global<Function> callbackFunc{ args[1].asFunction() };
 
-        return Boolean::newBoolean(NewProcess(args[0].toStr(),
+        return Boolean::newBoolean(NewProcess(process,
             [callback{ std::move(callbackFunc) }, engine{ EngineScope::currentEngine() }]
         (int exitCode, string output)
         {

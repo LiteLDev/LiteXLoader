@@ -142,6 +142,9 @@
     <ClCompile Include="Engine\OperationCount.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="SafeGuardRecord.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="API\BaseAPI.h">
@@ -271,6 +274,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="CheckUpdate.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="SafeGuardRecord.h">
       <Filter>Main</Filter>
     </ClInclude>
   </ItemGroup>
