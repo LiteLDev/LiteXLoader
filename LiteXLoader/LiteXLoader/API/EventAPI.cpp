@@ -37,6 +37,7 @@
 #include <MC/BlockInstance.hpp>
 #include <MC/Block.hpp>
 #include <MC/VanillaBlocks.hpp>
+#include <MC/ItemStack.hpp>
 using namespace std;
 
 
@@ -412,7 +413,11 @@ void EnableEventListener(int eventId)
             {
                 IF_LISTENED(EVENT_TYPES::onAttackBlock)
                 {
-                    CallEvent(EVENT_TYPES::onAttackBlock, PlayerClass::newPlayer(ev.mPlayer), BlockClass::newBlock(ev.mBlockInstance), ItemClass::newItem(ev.mItemStack));
+                    CallEvent(EVENT_TYPES::onAttackBlock,
+                        PlayerClass::newPlayer(ev.mPlayer),
+                        BlockClass::newBlock(ev.mBlockInstance),
+                        !ev.mItemStack->isNull() ? ItemClass::newItem(ev.mItemStack) : Local<Value>()
+                    );
                 }
                 IF_LISTENED_END(EVENT_TYPES::onAttackBlock);
             });
