@@ -12,7 +12,6 @@
 #include <LoggerAPI.h>
 #include <vector>
 #include <string>
-#include <LoggerAPI.h>
 using std::string;
 using std::vector;
 
