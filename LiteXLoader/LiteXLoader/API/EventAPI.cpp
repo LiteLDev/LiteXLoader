@@ -396,14 +396,19 @@ void EnableEventListener(int eventId)
     case EVENT_TYPES::onAttackEntity:
         Event::PlayerAttackEvent::subscribe([](const PlayerAttackEvent& ev)
         {
-            IF_LISTENED(EVENT_TYPES::onAttack)
+            if (ev.mTarget)
             {
-                if (ev.mTarget)
+                IF_LISTENED(EVENT_TYPES::onAttackEntity)
+                {
+                    CallEvent(EVENT_TYPES::onAttackEntity, PlayerClass::newPlayer(ev.mPlayer), EntityClass::newEntity(ev.mTarget));
+                }
+                IF_LISTENED_END(EVENT_TYPES::onAttackEntity);
+                IF_LISTENED(EVENT_TYPES::onAttack)
                 {
                     CallEvent(EVENT_TYPES::onAttack, PlayerClass::newPlayer(ev.mPlayer), EntityClass::newEntity(ev.mTarget));
                 }
+                IF_LISTENED_END(EVENT_TYPES::onAttack);
             }
-            IF_LISTENED_END(EVENT_TYPES::onAttack);
         });
         break;
 
