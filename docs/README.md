@@ -9,15 +9,15 @@
 ![LiteXLoader](https://socialify.git.ci/LiteLDev/LiteXLoader/image?description=1&descriptionEditable=%E5%88%92%E6%97%B6%E4%BB%A3%20x%20%E8%B7%A8%E8%AF%AD%E8%A8%80%20BDS%E8%84%9A%E6%9C%AC%E6%8F%92%E4%BB%B6%E5%8A%A0%E8%BD%BD%E5%99%A8&font=KoHo&forks=1&logo=https%3A%2F%2Fgithub.com%2FLiteLDev%2FLiteXLoader%2Fblob%2Fmain%2Fassets%2FLXL.png%3Fraw%3Dtrue&owner=1&pattern=Circuit%20Board&pulls=1&stargazers=1&theme=Light)
 
 ## 🎨 简介
-`LiteXLoader`是一个基岩版官方服务端`Bedrock Dedicated Server`（以下简称**BDS**）的脚本插件框架，提供强大的跨语言脚本插件支持能力和稳定的开发API支持。  
+`LiteXLoader`是一个基岩版官方服务端`Bedrock Dedicated Server`（以下简称**BDS**）的脚本插件框架，提供强大的跨语言脚本插件支持能力和稳定的开发API支持。
 
-目前，基于注入技术的C++插件开发框架`LiteLoader`的使用十分广泛。它为拓展基岩版**BDS**的更多玩法和功能提供了坚实的基础，弥补了官方行为包系统长期以来存在的一些不足。
+目前，基于注入技术的C++插件开发框架`LiteLoader`的使用十分广泛。它为拓展**BDS**的更多玩法和功能提供了坚实的基础，弥补了官方行为包系统长期以来存在的一些不足。
 
 而脚本插件开发框架 `LiteXLoader` 的到来，进一步降低了开发门槛，为更多开发者参与社区发展提供了很好的支持。
 
-使用脚本开发**BDS**插件具有上手容易、代码简洁、便于维护的优点。同时脚本插件不需要随着**BDS**版本更新而修改代码，仅需本项目在底层适配更新即可，给插件开发与维护带来了很大的便利。  
+使用脚本开发**BDS**插件具有上手容易、代码简洁、便于维护的优点。同时脚本插件不需要随着**BDS**版本更新而修改代码，仅需本项目在底层适配更新即可，给插件开发与维护带来了很大的便利。
 
-作为先进的脚本插件支持引擎，`LiteXLoader`支持使用多种不同的脚本语言编写插件，拥有完善的API系统、事件系统和大量的开发基础设施，为开发者提供了最大程度的便利。  
+作为先进的脚本插件支持引擎，`LiteXLoader`支持使用多种不同的脚本语言编写插件，拥有完善的API系统、事件系统和大量的开发基础设施，为开发者提供了最大程度的便利。
 
 ## 🎁 优势
 > “为什么我要选择LiteXLoader？”
@@ -26,9 +26,9 @@
 
 ##### 便于学习，快速编写 ⚽
 
-对众多接口和事件进行了 **封装**，使用各种脚本语言作为基础，代码简短易上手，学习周期短 
+对众多接口和事件进行了 **封装**，使用各种脚本语言作为基础，代码简短易上手，学习周期短
 
-这里用一个简易的游戏内停服插件作为参考示例：  
+这里用一个简易的游戏内停服插件作为参考示例：
 
 ```javascript
 let _VER = '1.1.1'
@@ -45,7 +45,7 @@ mc.regPlayerCmd("stop","关闭服务器", (pl,args) => {
         return true;
     pl.tell("停服命令执行成功",1);
     mc.broadcast("玩家" + pl.realName + "执行停服命令。服务器将在5秒之后关闭");
-    
+
     //执行关服命令
     setTimeout(() => {
         mc.runcmd("stop");
@@ -55,8 +55,8 @@ mc.regPlayerCmd("stop","关闭服务器", (pl,args) => {
 
 ##### 多种脚本语言支持 📚
 
-LXL 的插件可以使用 **多种** 不同的脚本语言开发。自由选择你的最爱！  
-同时，保证面向各种语言的接口统一    
+LXL 的插件可以使用 **多种** 不同的脚本语言开发。自由选择你的最爱！
+同时，保证面向各种语言的接口统一
 
 | 目前已支持的插件开发语言   | `JavaScript`，`Lua`                  |
 | -------------------------- | ------------------------------------ |
@@ -64,12 +64,12 @@ LXL 的插件可以使用 **多种** 不同的脚本语言开发。自由选择�
 
 ##### 开发文档内容详细，解释深入  📕
 
-LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学习，快速上手  
-欢迎 👉[移步 LXL 文档站](https://lxl.litebds.com/)👈 查看更多  
+LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学习，快速上手
+欢迎 👉[移步 LXL 文档站](https://lxl.litebds.com/)👈 查看更多
 
 ##### 大量开发辅助工具  🧰
 
-多语言补全库，强大的VSCode插件，热加载系统 ......  体验 **前所未有** 的开发体验  
+多语言补全库，强大的VSCode插件，热加载系统 ......  体验 **前所未有** 的开发体验
 众多辅助工具，帮你更有效地写好每一行代码
 
 更多详情，请见下面的具体介绍
@@ -93,14 +93,14 @@ LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学�
 - 脚本层底层调用接口
 - 热加载、热卸载、热重载插件
 
-完善，严谨，成体系的 **面向对象** api架构，符合编程逻辑的接口设计。  
+完善，严谨，成体系的 **面向对象** api架构，符合编程逻辑的接口设计。
 让你专注于业务代码实现，而非在各种琐碎的技术细节上磕磕绊绊
 
 ### 🎨 架构设计充分
 
 ##### 兼容性强 🏆
 
-- LXL支持通过Wine在Linux、MacOS平台运行，给Linux平台也带来自由的插件体验  
+- LXL支持通过Wine在Linux、MacOS平台运行，给Linux平台也带来自由的插件体验
   一次编写，**多平台共享**
 - 仅依赖 `LiteLoader` 加载器和标准的C/C++运行时库，没有其他的额外依赖，兼容性极强
 - 兼容绝大多数其他主流插件加载器（`CSR` `PYR`等）
@@ -115,15 +115,15 @@ LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学�
 
 ##### 海量现有插件，成熟发布平台 ⛳
 
-- 即刻 👉[前往MineBBS](https://www.minebbs.com/resources/?prefix_id=67)👈 查找并下载你喜欢的LXL插件  
+- 即刻 👉[前往MineBBS](https://www.minebbs.com/resources/?prefix_id=67)👈 查找并下载你喜欢的LXL插件
 - 同样，欢迎每一位开发者前往对应平台进行插件发布，技术交流与学习
 
 ##### 开源 & 永久免费 💡
 
-- 项目采用 `GPL-3.0` 开源许可证，**永远不会** 收费或者推出商业版。  
-- 设计思想采取 **去中心化** 设计，你可以放心享受 **自由** 的插件加载框架！  
+- 项目采用 `GPL-3.0` 开源许可证，**永远不会** 收费或者推出商业版。
+- 设计思想采取 **去中心化** 设计，你可以放心享受 **自由** 的插件加载框架！
 
-希望社区多多贡献力量，共同维护和建设这个项目💕   
+希望社区多多贡献力量，共同维护和建设这个项目💕
 
 <br>
 
@@ -131,7 +131,7 @@ LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学�
 
 ## 💻 安装
 
-在安装 `LiteXLoader` 之前，你需要先配置好其依赖的 `LiteLoader` 加载器环境。  
+在安装 `LiteXLoader` 之前，你需要先配置好其依赖的 `LiteLoader` 加载器环境。
 `LiteLoader`是知名的BDS C++插件加载器，提供了强大的底层API支持。LXL使用其提供的接口，并进行了很多拓展。
 
 1. [点击此处 前往MineBBS](https://www.minebbs.com/resources/liteloader.2059/)下载对应版本的 `LiteLoader` ，按要求解压之后运行SymDB2.exe生成相关数据
@@ -143,9 +143,9 @@ LXL 拥有 **极其详尽** 的文档说明和示例，帮助你从零开始学�
 
 ## 📥自动更新
 
-从版本`0.3.2`开始，LXL加入了自动更新的功能。  
-在同一个BDS版本内，加载器的更新将 **自动推送**，在下一次启动服务端时 **自动安装**。  
-最新特性，第一时间获得！免去反复手动升级的麻烦  
+从版本`0.3.2`开始，LXL加入了自动更新的功能。
+在同一个BDS版本内，加载器的更新将 **自动推送**，在下一次启动服务端时 **自动安装**。
+最新特性，第一时间获得！免去反复手动升级的麻烦
 做一回真正的甩手掌柜😆
 
 ## 🎯 加载插件
@@ -162,24 +162,24 @@ LXL插件主要发布于**MineBBS**，请 [点击这里 前往MineBBS](https://w
 
 ## 📡 实时调试
 在BDS后台控制台执行
-- `jsdebug`  
+- `jsdebug`
 进入Js实时调试模式
-- `luadebug`  
+- `luadebug`
 进入Lua实时调试模式
 
-实时调试模式下，标准输入会被当做对应类型的脚本语言执行，并实时输出结果。  
-如果发生错误，引擎将输出错误信息与堆栈跟踪信息。  
+实时调试模式下，标准输入会被当做对应类型的脚本语言执行，并实时输出结果。
+如果发生错误，引擎将输出错误信息与堆栈跟踪信息。
 再次输入对应的`jsdebug`或`luadebug`将退出实时调试模式。
 
 ## 🔌 插件热管理
 
 不用关闭服务端，就可以对LXL装载的脚本插件进行热管理。LXL提供了下面这些后台控制台命令
 
-- `lxl list`  
-- `lxl load ./plugins/xxxx.js`  
-- `lxl unload xxxx.lua`  
-- `lxl reload xxxx.js`  
-- `lxl reload`  
+- `lxl list`
+- `lxl load ./plugins/xxxx.js`
+- `lxl unload xxxx.lua`
+- `lxl reload xxxx.js`
+- `lxl reload`
 
 关于他们的具体介绍和相关使用方法，请👉[移步 LXL 文档站](https://lxl.litebds.com/#/zh_CN/Usage/)👈查看
 
@@ -191,10 +191,10 @@ LXL插件主要发布于**MineBBS**，请 [点击这里 前往MineBBS](https://w
 
 ### 开发文档与教程
 
-请👉[移步 LXL 文档站](https://lxl.litebds.com/#/zh_CN/Development/)👈查看详细的**API文档**和**插件开发教程**  
-如果有修订需求或者有新增API的需要，欢迎联系作者或者发布Issue  
+请👉[移步 LXL 文档站](https://lxl.litebds.com/#/zh_CN/Development/)👈查看详细的**API文档**和**插件开发教程**
+如果有修订需求或者有新增API的需要，欢迎联系作者或者发布Issue
 
-[点击这里](https://github.com/LiteLDev-LXL) 查看更多开源的LXL插件，作为示例插件。  
+[点击这里](https://github.com/LiteLDev-LXL) 查看更多开源的LXL插件，作为示例插件。
 你可以直接在生产环境中使用它们
 也可以在这里学习插件开发的方法和技巧
 
@@ -203,22 +203,22 @@ LXL插件主要发布于**MineBBS**，请 [点击这里 前往MineBBS](https://w
 ### VSCode 开发辅助插件 & 补全库
 
 使用 Moxicat 开发的 LiteXLoader 开发辅助插件
-帮助你更好地完成LXL插件的开发  
+帮助你更好地完成LXL插件的开发
 代码提示、自动补全、自动文档、错误提醒、运行时调试。。。。
-只有你想不到，没有他做不到  
+只有你想不到，没有他做不到
 用过绝不后悔的顶级插件开发体验！
 
 ![LXLDevHelper](assets/LXLDevHelper.gif)
 
 [点击这里](https://www.minebbs.com/resources/lxldevhelper.2672/)
-查看扩展说明与介绍  
+查看扩展说明与介绍
 VSCode扩展商店搜索`LXL`，安装**LXLDevHelper**，即刻体验
 
 <br>
 
 ### Blockly-LXL 图形化开发套件
 
-没有编程基础？对复杂的语言规则感到厌烦？  
+没有编程基础？对复杂的语言规则感到厌烦？
 你有没有想过，BDS插件开发可以像拼图一样容易？
 
 看这里！pa733的 Blockly-LXL 图形化开发套件，将插件开发体验提升到了新的高度
@@ -238,8 +238,8 @@ CJS.JS作者是callstackexceed，这个插件为在LXL下使用Js开发插件提
 
 [点击这里](https://github.com/callstackexceed/cjs.js) 前往GitHub查看使用说明，并下载使用
 
-项目作者callstackexceed，也是MC addon `NormaConstructor`的一个开发者。  
-`NormaConstructor`是一个开源的快速建造（类WorldEdit）插件，目前运行在Scripting API和LXL上。  
+项目作者callstackexceed，也是MC addon `NormaConstructor`的一个开发者。
+`NormaConstructor`是一个开源的快速建造（类WorldEdit）插件，目前运行在Scripting API和LXL上。
 NC不仅需要用户，也需要开发人员。欢迎大家在 [MineBBS](https://www.minebbs.com/resources/integral-worldedit-liteloader.2738/) 和 mcpedl 关注 `NormaConstructor` 的相关进展
 
 <br>
@@ -250,11 +250,11 @@ NC不仅需要用户，也需要开发人员。欢迎大家在 [MineBBS](https:/
 
 > 前往`LiteXLoader`项目的[`GitHub Actions`](https://github.com/LiteLDev/LiteXLoader/actions)页面获取最新的自动构建结果
 
-当然，如果你愿意自己编译项目，也可以按照如下说明自行编译  
+当然，如果你愿意自己编译项目，也可以按照如下说明自行编译
 VS项目采用多目标构建，构建的每种配置对应一种脚本语言
 
-1. Install newest **Microsoft Visual Studio** with standard C++ building suite
-2. Install the newest version of **Windows SDK**
+1. 安装带有**使用C++的桌面开发**工作负荷的**Microsoft Visual Studio**
+2. 安装最新版**Windows SDK**
 3. 打开 LiteXLoader 目录下的 `LiteXLoader.sln` 项目文件，点击 **生成** 菜单中的 **批生成** 项
 4. 弹出批生成对话框，选中每种语言配置对应的 **x64** 平台右侧的生成复选框
 5. 选择完毕之后，点击对话框中的 **生成** 按钮，进行批生成
@@ -269,8 +269,8 @@ VS项目采用多目标构建，构建的每种配置对应一种脚本语言
 3. 按格式编写你想要的新API并提交PR，或者提出好的建议
 4. 帮助我们宣传LXL，对我们的开发给予支持
 
-⭐⭐⭐我们欢迎你对LiteXLoader做出自己的贡献！⭐⭐⭐  
-如果你有意为LXL贡献代码，欢迎👉[移步 LXL 文档站](https://lxl.litebds.com/#/zh_CN/Maintance/)👈查看 **项目维护与支持文档**  
+⭐⭐⭐我们欢迎你对LiteXLoader做出自己的贡献！⭐⭐⭐
+如果你有意为LXL贡献代码，欢迎👉[移步 LXL 文档站](https://lxl.litebds.com/#/zh_CN/Maintance/)👈查看 **项目维护与支持文档**
 
 有你们，LiteXLoader将变得更好~
 
@@ -279,25 +279,25 @@ VS项目采用多目标构建，构建的每种配置对应一种脚本语言
 ------
 
 ## 📍 许可协议声明
-在使用我们的产品的时候，我们默认您已经承认并遵守了[Mojang Studios EULA](https://account.mojang.com/documents/minecraft_eula)协议。  
-这意味着你不能对本项目进行任何违反EULA的商业性使用。违反EULA协议造成的一切后果由违反者自行承担。  
-另外，您需要遵守本项目的`GPL-3.0`开源许可证条款，以及下列提到的各关联项目的开源许可证条款 
+在使用我们的产品的时候，我们默认您已经承认并遵守了[Mojang Studios EULA](https://account.mojang.com/documents/minecraft_eula)协议。
+这意味着你不能对本项目进行任何违反EULA的商业性使用。违反EULA协议造成的一切后果由违反者自行承担。
+另外，您需要遵守本项目的`GPL-3.0`开源许可证条款，以及下列提到的各关联项目的开源许可证条款
 
-[LiteLoader](https://github.com/LiteLDev/LiteLoader) GPLv3 with extra restrictions&exceptions    
-[ScriptX](https://github.com/Tencent/ScriptX) Apache License Version 2.0  
-[BedrockX](https://github.com/Sysca11/BedrockX) GPLv3 with extra restrictions&exceptions  
-[ElementZero](https://github.com/Element-0/ElementZero) GPL v3  
-[ChakraCore](https://github.com/chakra-core/ChakraCore) MIT License  
-[OpenSSL](https://github.com/openssl/openssl) Apache License Version 2.0    
-[SimpleIni](https://github.com/brofield/simpleini) MIT License  
-[Nlohmann-Json](https://github.com/nlohmann/json) MIT License  
-[Hash](https://github.com/Chocobo1/Hash) GPL v3  
-[ThreadPool](https://github.com/jhasse/ThreadPool) Zlib License  
-[nbt-cpp](https://github.com/handtruth/nbt-cpp) MIT License  
+[LiteLoader](https://github.com/LiteLDev/LiteLoader) GPLv3 with extra restrictions&exceptions
+[ScriptX](https://github.com/Tencent/ScriptX) Apache License Version 2.0
+[BedrockX](https://github.com/Sysca11/BedrockX) GPLv3 with extra restrictions&exceptions
+[ElementZero](https://github.com/Element-0/ElementZero) GPL v3
+[ChakraCore](https://github.com/chakra-core/ChakraCore) MIT License
+[OpenSSL](https://github.com/openssl/openssl) Apache License Version 2.0
+[SimpleIni](https://github.com/brofield/simpleini) MIT License
+[Nlohmann-Json](https://github.com/nlohmann/json) MIT License
+[Hash](https://github.com/Chocobo1/Hash) GPL v3
+[ThreadPool](https://github.com/jhasse/ThreadPool) Zlib License
+[nbt-cpp](https://github.com/handtruth/nbt-cpp) MIT License
 [LightWebSocketClient](https://github.com/cyanray/LightWebSocketClient) MIT License
 
 ### Extra Restrictions & Exceptions
-If you provides a server hosting service,you can use this framework for free, but you SHOULD NOT make PRIVATE changes to this framework as a selling point. If you fixed or tweaked the code, please pull request, instead of making it private for commercial use. 
+If you provides a server hosting service,you can use this framework for free, but you SHOULD NOT make PRIVATE changes to this framework as a selling point. If you fixed or tweaked the code, please pull request, instead of making it private for commercial use.
 > Do not do evil.
 
 Although we expected to build an open-source community, but forcing everything open-source will ruin this community.
@@ -307,7 +307,7 @@ but if you modified the framework, or write a new framework based on this framew
 ## 🏆 鸣谢
 - 开源 [ScriptX](https://github.com/Tencent/ScriptX) 项目提供的跨语言引擎支持
 - ScriptX开发者 [@LanderlYoung](https://github.com/Tencent/ScriptX/commits?author=LanderlYoung) 在开发过程中给予的很多帮助
-- LiteLDev 开发组 [LiteLoader](https://github.com/LiteLDev/LiteLoaderBDS) 项目提供的加载服务与基础API  
+- LiteLDev 开发组 [LiteLoader](https://github.com/LiteLDev/LiteLoaderBDS) 项目提供的加载服务与基础API
 - [LiteLuaLoader](https://github.com/wzyyyyyyy) 项目 和 [BDSPyRunner](https://github.com/twoone-3/BDSpyrunner) 项目 提供的很多底层接口实现
 - 感谢整个BDS开源社区对项目做出的大大小小的贡献。感谢他们！ 💖💖
 
@@ -319,15 +319,15 @@ but if you modified the framework, or write a new framework based on this framew
 
 ## 📞 联系我们
 
-LiteXLoader QQ交流群：850517473 [点击加入](https://jq.qq.com/?_wv=1027&k=zeUbrETH)  
-LiteLoader QQ交流群：656669024 [点击加入](https://jq.qq.com/?_wv=1027&k=lagwtrfh)  
-Discord 频道：#LiteLoaderBDS & LXL [点击加入](https://discord.gg/4tBQHc9u7p)  
+LiteXLoader QQ交流群：850517473 [点击加入](https://jq.qq.com/?_wv=1027&k=zeUbrETH)
+LiteLoader QQ交流群：656669024 [点击加入](https://jq.qq.com/?_wv=1027&k=lagwtrfh)
+Discord 频道：#LiteLoaderBDS & LXL [点击加入](https://discord.gg/4tBQHc9u7p)
 Telegram 频道：#LiteLoader [点击加入](https://t.me/LiteLoader)
 
 欢迎反馈崩溃和版本适配问题，以及参与相关技术讨论与交流。
 
 ## 💕赞助作者💕
-项目已接入爱发电 [点击此处](https://afdian.net/@LiteXLoader?tab=home)    
-Patreon Sponser [Click Here](https://www.patreon.com/litexloader) 
+项目已接入爱发电 [点击此处](https://afdian.net/@LiteXLoader?tab=home)
+Patreon Sponser [Click Here](https://www.patreon.com/litexloader)
 
-给我们不断继续下去的动力！  
+给我们不断继续下去的动力！
