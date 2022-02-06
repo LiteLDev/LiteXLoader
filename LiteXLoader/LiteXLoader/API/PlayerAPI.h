@@ -49,7 +49,6 @@ public:
     Local<Value> tell(const Arguments& args);
     Local<Value> talkAs(const Arguments& args);
     Local<Value> rename(const Arguments& args);
-    Local<Value> addLevel(const Arguments& args);
     Local<Value> transServer(const Arguments& args);
     Local<Value> crash(const Arguments& args);
     Local<Value> hurt(const Arguments& args);
@@ -69,6 +68,12 @@ public:
     Local<Value> getEnderChest(const Arguments& args);
     Local<Value> getRespawnPosition(const Arguments& args);
     Local<Value> refreshItems(const Arguments& args);
+
+    Local<Value> addLevels(const Arguments& args);
+    Local<Value> getLevel();
+    Local<Value> resetLevel();
+    Local<Value> getXpNeededForNextLevel();
+    Local<Value> addExperience(const Arguments& args);
 
     Local<Value> getScore(const Arguments& args);
     Local<Value> setScore(const Arguments& args);
