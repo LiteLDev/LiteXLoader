@@ -45,20 +45,30 @@ using namespace std;
 
 enum class EVENT_TYPES : int
 {
-    onPreJoin=0, onJoin, onLeft, onPlayerCmd, onChat, onPlayerDie, 
-    onRespawn, onChangeDim, onJump, onSneak, onEat, onMove, onChangeSprinting, onSpawnProjectile,
-    onAttack, onAttackEntity, onAttackBlock,
-    onFireworkShootWithCrossbow, onSetArmor, onRide, onStepOnPressurePlate,
-    onUseItem, onTakeItem, onDropItem, onUseItemOn, onInventoryChange, onChangeArmorStand,
-    onStartDestroyBlock, onDestroyBlock, onWitherBossDestroy, onPlaceBlock, onLiquidFlow,
-    onOpenContainer, onCloseContainer, onContainerChange, onOpenContainerScreen, 
-    onExplode, onBlockExploded, onBedExplode, onRespawnAnchorExplode, onEntityExplode, onBlockExplode,
-    onMobDie, onMobHurt, onCmdBlockExecute, onRedStoneUpdate, onProjectileHitEntity,
-    onProjectileHitBlock, onBlockInteracted, onUseRespawnAnchor, onFarmLandDecay, onUseFrameBlock,
-    onPistonTryPush,  onPistonPush, onHopperSearchItem, onHopperPushOut, onFireSpread, onBlockChanged, onNpcCmd,
-    onScoreChanged, onServerStarted, onConsoleCmd, onFormSelected, onConsoleOutput, onTick,
-    onMoneyAdd, onMoneyReduce, onMoneyTrans, onMoneySet, onConsumeTotem, onEffectAdded, onEffectUpdated, onEffectRemoved,
-    EVENT_COUNT
+    /* Player Events */
+    onPreJoin = 0, onJoin, onLeft, onRespawn, onPlayerDie, onPlayerCmd, onChat,
+    onChangeDim, onJump, onSneak, onAttackEntity, onAttackBlock, onUseItem, onUseItemOn,
+    onTakeItem, onDropItem, onEat, onConsumeTotem, onEffectAdded, onEffectUpdated,
+    onEffectRemoved, onStartDestroyBlock, onDestroyBlock, onPlaceBlock, onOpenContainer,
+    onCloseContainer, onInventoryChange, onMove, onChangeSprinting, onSetArmor, onUseRespawnAnchor,
+    onOpenContainerScreen,
+    /* Entity Events */
+    onMobDie, onMobHurt, onEntityExplode, onProjectileHitEntity, onWitherBossDestroy, onRide,
+    onStepOnPressurePlate, onSpawnProjectile, onProjectileCreated, onNpcCmd, onChangeArmorStand,
+    onEntityTransformation,
+    /* Block Events */
+    onBlockInteracted, onBlockChanged, onBlockExplode, onRespawnAnchorExplode, onBlockExploded, 
+    onFireSpread, onCmdBlockExecute, onContainerChange, onProjectileHitBlock, onRedStoneUpdate,
+    onHopperSearchItem, onHopperPushOut, onPistonTryPush, onPistonPush, onFarmLandDecay, 
+    onUseFrameBlock, onLiquidFlow,
+    /* Other Events */
+    onScoreChanged, onTick, onServerStarted, onConsoleCmd, onConsoleOutput,
+    /* Economic Events */
+    onMoneyAdd, onMoneyReduce, onMoneyTrans, onMoneySet,
+    /* Outdated Events */
+    onAttack, onExplode, onBedExplode,
+    /* Internal */
+    onFormSelected, EVENT_COUNT
 };
 static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onPreJoin",EVENT_TYPES::onPreJoin},
@@ -78,7 +88,7 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onMove",EVENT_TYPES::onMove},
     {"onChangeSprinting",EVENT_TYPES::onChangeSprinting},
     {"onSpawnProjectile",EVENT_TYPES::onSpawnProjectile},
-    {"onFireworkShootWithCrossbow",EVENT_TYPES::onFireworkShootWithCrossbow},
+    {"onProjectileCreated",EVENT_TYPES::onProjectileCreated},
     {"onSetArmor",EVENT_TYPES::onSetArmor},
     {"onRide",EVENT_TYPES::onRide},
     {"onStepOnPressurePlate",EVENT_TYPES::onStepOnPressurePlate},
@@ -110,6 +120,7 @@ static const std::unordered_map<string, EVENT_TYPES> EventsMap{
     {"onRedStoneUpdate",EVENT_TYPES::onRedStoneUpdate},
     {"onProjectileHitBlock",EVENT_TYPES::onProjectileHitBlock},
     {"onProjectileHitEntity",EVENT_TYPES::onProjectileHitEntity},
+    {"onEntityTransformation",EVENT_TYPES::onEntityTransformation},
     {"onBlockInteracted",EVENT_TYPES::onBlockInteracted},
     {"onUseRespawnAnchor",EVENT_TYPES::onUseRespawnAnchor},
     {"onFarmLandDecay",EVENT_TYPES::onFarmLandDecay},
@@ -392,7 +403,19 @@ void EnableEventListener(int eventId)
         });
         break;
 
-    case EVENT_TYPES::onAttack:
+    case EVENT_TYPES::onAttack: // recently removed.
+        Event::PlayerAttackEvent::subscribe([](const PlayerAttackEvent& ev)
+            {
+                if (ev.mTarget)
+                {
+                    IF_LISTENED(EVENT_TYPES::onAttack)
+                    {
+                        CallEvent(EVENT_TYPES::onAttack, PlayerClass::newPlayer(ev.mPlayer), EntityClass::newEntity(ev.mTarget));
+                    }
+                    IF_LISTENED_END(EVENT_TYPES::onAttack);
+                }
+            });
+        break;
     case EVENT_TYPES::onAttackEntity:
         Event::PlayerAttackEvent::subscribe([](const PlayerAttackEvent& ev)
         {
@@ -403,11 +426,6 @@ void EnableEventListener(int eventId)
                     CallEvent(EVENT_TYPES::onAttackEntity, PlayerClass::newPlayer(ev.mPlayer), EntityClass::newEntity(ev.mTarget));
                 }
                 IF_LISTENED_END(EVENT_TYPES::onAttackEntity);
-                IF_LISTENED(EVENT_TYPES::onAttack)
-                {
-                    CallEvent(EVENT_TYPES::onAttack, PlayerClass::newPlayer(ev.mPlayer), EntityClass::newEntity(ev.mTarget));
-                }
-                IF_LISTENED_END(EVENT_TYPES::onAttack);
             }
         });
         break;
@@ -898,6 +916,16 @@ void EnableEventListener(int eventId)
         });
         break;
 
+    case EVENT_TYPES::onProjectileCreated:
+        Event::ProjectileCreatedEvent::subscribe([](const ProjectileCreatedEvent& ev) {
+            IF_LISTENED(EVENT_TYPES::onProjectileCreated)
+            {
+                CallEvent(EVENT_TYPES::onProjectileCreated, EntityClass::newEntity(ev.mShooter), EntityClass::newEntity(ev.mProjectile));
+            }
+            IF_LISTENED_END(EVENT_TYPES::onProjectileCreated);
+        });
+        break;
+
     case EVENT_TYPES::onProjectileHitEntity:
         Event::ProjectileHitEntityEvent::subscribe([](const ProjectileHitEntityEvent& ev) {
             IF_LISTENED(EVENT_TYPES::onProjectileHitEntity)
@@ -905,6 +933,16 @@ void EnableEventListener(int eventId)
                 CallEvent(EVENT_TYPES::onProjectileHitEntity, EntityClass::newEntity(ev.mTarget), EntityClass::newEntity(ev.mSource));
             }
             IF_LISTENED_END(EVENT_TYPES::onProjectileHitEntity);
+        });
+        break;
+
+    case EVENT_TYPES::onEntityTransformation:
+        Event::EntityTransformEvent::subscribe([](const EntityTransformEvent& ev) {
+            IF_LISTENED(EVENT_TYPES::onEntityTransformation)
+            {
+                CallEvent(EVENT_TYPES::onEntityTransformation, String::newString(to_string(ev.mBeforeEntityUniqueId->id)), EntityClass::newEntity(ev.mAfterEntity));
+            }
+            IF_LISTENED_END(EVENT_TYPES::onEntityTransformation);
         });
         break;
 
@@ -1239,25 +1277,6 @@ THook(void, "?tick@ServerLevel@@UEAAXXZ",
     return original(_this);
 }
 
-bool CallFireworkShootWithCrossbow(Player* pl)
-{
-    IF_LISTENED(EVENT_TYPES::onFireworkShootWithCrossbow)
-    {
-        CallEvent(EVENT_TYPES::onFireworkShootWithCrossbow, PlayerClass::newPlayer(pl));
-    }
-    IF_LISTENED_END(EVENT_TYPES::onFireworkShootWithCrossbow);
-}
-
-// ===== onFireworkShootWithCrossbow =====
-THook(void, "?_shootFirework@CrossbowItem@@AEBAXAEBVItemInstance@@AEAVPlayer@@@Z",
-    void* a1, void* a2, Player* a3)
-{
-    if (!CallFireworkShootWithCrossbow(a3))
-        return;
-    original(a1, a2, a3);
-}
-
-
 /* onTurnLectern // 由于还是不能拦截掉书，暂时注释
 THook(void, "?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBVLecternUpdatePacket@@@Z",
     ServerNetworkHandler* handler, NetworkIdentifier* id, Packet* pkt)
@@ -1283,17 +1302,6 @@ THook(void, "?handle@ServerNetworkHandler@@UEAAXAEBVNetworkIdentifier@@AEBVLecte
     original(handler,id,pkt);
 }
 */
-
-/* ==== = onSplashPotionHitEffect ==== =
-THook(void, "?doOnHitEffect@SplashPotionEffectSubcomponent@@UEAAXAEAVActor@@AEAVProjectileComponent@@@Z",
-    void* _this, Actor* a2, ProjectileComponent* a3)
-*/
-
-/* ==== = onFishingHookRetrieve ==== =
-THook(__int64, "?retrieve@FishingHook@@QEAAHXZ",
-    FishingHook* _this)
-*/
-
 
 bool MoneyEventCallback(LLMoneyEvent type, xuid_t from, xuid_t to, money_t value)
 {
@@ -1340,45 +1348,3 @@ bool MoneyEventCallback(LLMoneyEvent type, xuid_t from, xuid_t to, money_t value
     }
     return true;
 }
-
-/*
-class InventoryTransaction;
-THook(void, "?handle@?$PacketHandlerDispatcherInstance@VInventoryTransactionPacket@@$0A@@@UEBAXAEBVNetworkIdentifier@@AEAVNetEventCallback@@AEAV?$shared_ptr@VPacket@@@std@@@Z",
-    void* _this, NetworkIdentifier* id, ServerNetworkHandler* handler, void* pPacket)
-{
-    Packet* packet = *(Packet**)pPacket;
-    Player* p = Raw_GetPlayerFromPacket(handler, id, packet);
-    
-    ///
-        NORMAL = 0,
-        MISMATCH = 1,
-        USE_ITEM = 2,
-        USE_ITEM_ON_ENTITY = 3,
-        RELEASE_ITEM = 4
-    ///
-
-    auto type = *(DWORD*)(*((QWORD*)packet + 10) + 8i64);
-    auto invts = (InventoryTransaction*)(*((QWORD*)packet + 10) + 16i64);
-    cout << "PacketType: " << type << "\n";
-
-    RBStream rb(packet,0);
-
-    unsigned actionType;
-    int bp_x;
-    unsigned bp_y;
-    int bp_z;
-    int blockFace;
-    int hotbarSlot;
-
-    rb.apply(actionType, bp_x, bp_y, bp_z, blockFace, hotbarSlot);
-
-    cout << actionType << "\n"
-        << bp_x << "\n"
-        << bp_y << "\n"
-        << bp_z << "\n"
-        << blockFace << "\n"
-        << hotbarSlot << "\n";
-
-    original(_this, id, handler, pPacket);
-}
-*/
