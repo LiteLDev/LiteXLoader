@@ -101,6 +101,11 @@ void LoadMain()
             if (LxlLoadPlugin(i.path().string()))
                 ++count;
         }
+        if (i.is_regular_file() && i.path().extension() == ".lxl")
+        {
+            if (LxlLoadPlugin(i.path().string(), false, true))
+                ++count;
+        }
     }
     logger.info(std::to_string(count) + " " + LXL_MODULE_TYPE + " plugins loaded in all.");
 }

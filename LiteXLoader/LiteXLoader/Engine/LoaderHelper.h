@@ -10,13 +10,15 @@ void RemoteLoadCallback(ModuleMessage& msg);
 void RemoteLoadReturnCallback(ModuleMessage& msg);
 
 //加载插件
-bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad = false);
+bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad = false, bool isPackage = false);
 //卸载插件
 std::string LxlUnloadPlugin(const std::string& name);
 //重载插件
 bool LxlReloadPlugin(const std::string& name);
 //重载所有插件
 bool LxlReloadAllPlugins();
+//解压.lxl包
+string UnzipPluginPack(const std::string& filePath);
 
 //获取当前语言的所有插件
 std::vector<std::string> LxlListLocalAllPlugins();

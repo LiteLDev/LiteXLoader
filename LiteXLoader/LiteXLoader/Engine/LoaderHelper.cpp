@@ -17,6 +17,8 @@
 #include <Engine/RemoteCall.h>
 #include <Engine/MessageSystem.h>
 #include <API/CommandAPI.h>
+#include <tchar.h>
+#include <zip_utils/header/unzip.h>
 #include <Utils/StringHelper.h>
 #include <ScheduleAPI.h>
 
@@ -77,13 +79,13 @@ void RemoteLoadReturnCallback(ModuleMessage& msg)
 }
 
 //加载插件
-bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
+bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad, bool isPackage)
 {
     if (filePath == LXL_DEBUG_ENGINE_NAME)
         return true;
 
     string suffix = filesystem::path(filePath).extension().u8string();
-    if (suffix != LXL_PLUGINS_SUFFIX)
+    if (suffix != LXL_PLUGINS_SUFFIX && suffix != ".lxl")
     {
         //Remote Load
         logger.debug("Remote Load begin");
@@ -140,7 +142,27 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
 
     try
     {
-        std::string scripts = ReadFileFrom(filePath);
+        std::string scripts;
+        if (isPackage)
+        {
+            std::string _filePath = UnzipPluginPack(filePath);
+            if (_filePath != "")
+            {
+                std::string entry = filesystem::exists(_filePath + "main" + LXL_PLUGINS_SUFFIX) ? 
+                    "main" : pluginName.substr(0, pluginName.rfind("."));
+                _filePath += entry + LXL_PLUGINS_SUFFIX;
+                scripts = ReadFileFrom(_filePath);
+            }
+            else
+            {
+                logger.error("Fail to unzip" + filePath);
+                return false;
+            }
+        }
+        else
+        {
+            scripts = ReadFileFrom(filePath);
+        }
 
         //启动引擎
         ScriptEngine* engine = NewEngine();
@@ -150,6 +172,7 @@ bool LxlLoadPlugin(const std::string& filePath, bool isHotLoad)
         //setData
         ENGINE_OWN_DATA()->pluginName = pluginName;
         ENGINE_OWN_DATA()->pluginPath = filePath;
+        ENGINE_OWN_DATA()->isPackage = isPackage;
         ENGINE_OWN_DATA()->logger.title = SplitStrWithPattern(pluginName,"\.")[0];
 
         //绑定API
@@ -238,6 +261,14 @@ string LxlUnloadPlugin(const std::string& name)
         if (ENGINE_GET_DATA(engine)->pluginName == name)
         {
             unloadedPath = ENGINE_GET_DATA(engine)->pluginPath;
+            if (ENGINE_GET_DATA(engine)->isPackage)
+            {
+                string pluginName = ENGINE_GET_DATA(engine)->pluginName;
+                pluginName = pluginName.substr(0, pluginName.rfind("."));
+                string pluginCache = LXL_PLUGINS_CACHE + pluginName;
+                if (filesystem::exists(pluginCache))
+                    filesystem::remove_all(pluginCache);
+            }
 
             LxlCallEventsOnHotUnload(engine);
             RemoveFromGlobalPluginsList(name);
@@ -268,7 +299,8 @@ bool LxlReloadPlugin(const std::string& name)
     string unloadedPath = LxlUnloadPlugin(name);
     if (unloadedPath.empty())
         return false;
-    return LxlLoadPlugin(unloadedPath,true);
+    bool isPackage = (filesystem::path(unloadedPath).extension() == ".lxl");
+    return LxlLoadPlugin(unloadedPath, true, isPackage);
 }
 
 //重载全部插件
@@ -298,4 +330,59 @@ vector<string> LxlListLocalAllPlugins()
 vector<string> LxlListGlocalAllPlugins()
 {
     return globalShareData->pluginsList;
+}
+
+//解压.lxl包
+string UnzipPluginPack(const std::string& filePath)
+{
+    //将路径转为WCHAR类型
+    function toWchar = [](const std::string& fp)
+    {
+        int iUnicode = MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), NULL, 0);
+        WCHAR* pwUnicode = new WCHAR[iUnicode + 2];
+        if (pwUnicode)
+        {
+            ZeroMemory(pwUnicode, iUnicode + 2);
+        }
+        MultiByteToWideChar(CP_ACP, 0, fp.c_str(), fp.length(), pwUnicode, iUnicode);
+        pwUnicode[iUnicode] = '\0';
+        pwUnicode[iUnicode + 1] = '\0';
+        return pwUnicode;
+    };
+
+    string pluginName = std::filesystem::path(filePath).filename().u8string();
+    pluginName = pluginName.substr(0, pluginName.rfind("."));
+    //防止重复解压
+    for (auto plugin : globalShareData->pluginsList)
+    {
+        plugin = plugin.substr(0, plugin.rfind("."));
+        if (pluginName == plugin)
+            return "";
+    }
+    try
+    {
+        HZIP hz = OpenZip(toWchar(filePath), NULL);
+        SetUnzipBaseDir(hz, toWchar(LXL_PLUGINS_CACHE + pluginName));
+        ZIPENTRY ze; GetZipItem(hz, -1, &ze); 
+        int numitems = ze.index;
+        for (int zi = 0; zi < numitems; zi++)
+        {
+            GetZipItem(hz, zi, &ze);
+            UnzipItem(hz, zi, ze.name);
+        }
+        CloseZip(hz);
+
+        return LXL_PLUGINS_CACHE + pluginName + "/";
+    }
+    catch (const std::exception& e)
+    {
+        logger.error("Fail to load " + pluginName +"!");
+        logger.error(e.what());
+        return "";
+    }
+    catch (...)
+    {
+        logger.error("Fail to load " + pluginName + "!");
+        return "";
+    }
 }

@@ -62,6 +62,8 @@ public:
     Local<Value> errorCode(const Arguments& args);
     Local<Value> clear(const Arguments& args);
 
+    static Local<Value> getCurrentDirectory();
+
     static Local<Value> readFromStatic(const Arguments& args) { return FileReadFrom(args); }
     static Local<Value> writeToStatic(const Arguments& args) { return FileWriteTo(args); }
     static Local<Value> writeLineStatic(const Arguments& args) { return FileWriteLine(args); }

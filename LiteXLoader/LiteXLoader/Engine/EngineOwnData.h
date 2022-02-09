@@ -20,6 +20,7 @@ struct EngineOwnData
     //基础信息
     std::string pluginName = "";
     std::string pluginPath = "";
+    bool isPackage = false;
 
     //表单回调
     std::map<unsigned, FormCallbackData> formCallbacks;

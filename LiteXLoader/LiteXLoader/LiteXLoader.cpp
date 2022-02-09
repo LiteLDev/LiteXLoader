@@ -61,6 +61,20 @@ void LoaderInfo()
         + to_string(LXL_VERSION_REVISION) + (isNotRelease ? string(" ") + LXL_VERSION_STATUS_STRING : string("")));
 }
 
+void InitPluginCache()
+{
+    if (std::filesystem::exists(LXL_PLUGINS_CACHE))
+    {
+        for (auto& path : std::filesystem::directory_iterator(LXL_PLUGINS_CACHE)) {
+            std::filesystem::remove_all(path);
+        }
+    }
+    else
+    {
+        CreateDirs(LXL_PLUGINS_CACHE);
+    }
+}
+
 void entry()
 {
     //设置全局SEH处理
@@ -98,6 +112,10 @@ void entry()
 
     //预加载库
     LoadDepends();
+    
+    //初始化插件缓存
+    if (localShareData->isFirstInstance)
+        InitPluginCache();
     
     //加载插件
     LoadMain();

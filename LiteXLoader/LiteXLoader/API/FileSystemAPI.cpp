@@ -48,6 +48,8 @@ ClassDefine<FileClass> FileClassBuilder =
         .property("WriteMode", [] { return Number::newNumber((int)FileOpenMode::WriteMode); })
         .property("AppendMode", [] { return Number::newNumber((int)FileOpenMode::AppendMode); })
     
+        .function("getCurrentDirectory", &FileClass::getCurrentDirectory)
+
         .function("readFrom", &FileClass::readFromStatic)
         .function("writeTo", &FileClass::writeToStatic)
         .function("writeLine", &FileClass::writeLineStatic)
@@ -69,6 +71,30 @@ ClassDefine<FileClass> FileClassBuilder =
 
 //////////////////// Classes ////////////////////
 
+//
+Local<Value> FileClass::getCurrentDirectory()
+{
+    try
+    {
+        ScriptEngine* engine = EngineScope::currentEngine();
+        string pluginPath;
+        if (ENGINE_OWN_DATA()->isPackage)
+        {
+            string pluginName = ENGINE_OWN_DATA()->pluginName;
+            pluginName = pluginName.substr(0, pluginName.rfind("."));
+            pluginPath = LXL_PLUGINS_CACHE + pluginName;
+            return String::newString(filesystem::path(pluginPath).u8string());
+        }
+        else
+        {
+            pluginPath = ENGINE_GET_DATA(engine)->pluginPath;
+            return String::newString(filesystem::path(pluginPath).parent_path().u8string());
+        }
+    }
+    CATCH("Fail in GetParentPath!")
+}
+
+#pragma region 生成函数
 //生成函数
 FileClass::FileClass(const Local<Object>& scriptObj, std::fstream&& f, const std::string& path, bool isBinary)
     :ScriptClass(scriptObj)
@@ -137,7 +163,9 @@ FileClass* FileClass::constructor(const Arguments& args)
     }
     CATCH_C("Fail in OpenFile!");
 }
+#pragma endregion
 
+#pragma region 成员函数
 //成员函数
 Local<Value> FileClass::getPath()
 {
@@ -540,7 +568,7 @@ Local<Value> FileClass::clear(const Arguments& args)
     }
     CATCH("Fail in flush!");
 }
-
+#pragma endregion
 
 //////////////////// APIs ////////////////////
 

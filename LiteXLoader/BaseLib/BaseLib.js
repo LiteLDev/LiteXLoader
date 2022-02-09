@@ -29,7 +29,7 @@ SOFTWARE.
 
     let coreModules = new Map([]);
 
-    let basePath = 'plugins/';
+    let basePath = File.getCurrentDirectory();
 
     let utilPath = {
         normalize(path) {
@@ -394,3 +394,8 @@ DirectionAngle.prototype.valueOf = function()
 {
     return this.toFacing();
 }
+
+/*
+
+*/
+const __BasePath__ = file.getCurrentDirectory();
