@@ -6,20 +6,20 @@
 
 #### 从事件或API获取
 
-通过注册**事件监听**函数，获取到BDS给出的与相关事件有关的玩家对象  
+通过注册**事件监听**函数，获取到BDS给出的与相关事件有关的玩家对象
 详见 [事件监听文档 - EventAPI](zh_CN/Development/EventAPI/Listen.md)
 
 #### 从现有玩家获取
 
-通过**玩家名**或者**xuid**手动生成玩家对象  
+通过**玩家名**或者**xuid**手动生成玩家对象
 通过此函数来手动生成对象，注意，你要获取的玩家必须是在线状态，否则会生成失败
 
 `mc.getPlayer(info)`
 
 - 参数：
-  - info : `String`  
+  - info : `String`
     玩家的名字或者Xuid
-- 返回值：生成的玩家对象 
+- 返回值：生成的玩家对象
 - 返回值类型：`Player`
   - 如返回值为 `Null` 则表示获取玩家失败
 
@@ -32,7 +32,7 @@
 - 返回值：在线的玩家对象列表
 - 返回值类型：`Array<Player,Player,...>`
 
-> 注意：不要**长期保存**一个玩家对象  
+> 注意：不要**长期保存**一个玩家对象
 > 当玩家退出服务器时，对应的玩家对象将变得无效。因此，如果有长期操作某个玩家的需要，请通过上述途径获取实时的玩家对象
 
 <br>
@@ -62,9 +62,9 @@
 
 这些对象属性都是只读的，无法被修改。其中：
 
-- **玩家游戏模式** 属性的取值为：`0` 代表生存模式，`1` 代表创造模式，`2` 代表冒险模式，`3` 代表旁观者模式 
-- **玩家真实名字** 属性储存的字符串可以被认为是可靠的，他们不会被改名而变动  
-- **玩家设备IP地址** 属性储存了玩家的设备IP以及端口号，格式类似`12.34.567.89:1111`  
+- **玩家游戏模式** 属性的取值为：`0` 代表生存模式，`1` 代表创造模式，`2` 代表冒险模式，`3` 代表旁观者模式
+- **玩家真实名字** 属性储存的字符串可以被认为是可靠的，他们不会被改名而变动
+- **玩家设备IP地址** 属性储存了玩家的设备IP以及端口号，格式类似`12.34.567.89:1111`
 - **玩家当前朝向** 属性的详细解释见  [基础游戏接口文档](zh_CN/Development/GameAPI/Basic.md)
 - **操作权限等级** 属性的对照表如下：
 
@@ -80,12 +80,12 @@
 
 每一个玩家对象都包含一些可以执行的成员函数（成员方法）。对于某个特定的玩家对象`pl`，可以通过以下这些函数对这个玩家进行一些操作
 
-#### 判断玩家是否为OP  
+#### 判断玩家是否为OP
 
 `pl.isOP()`
 
 - 返回值：玩家是否为OP
-- 返回值类型：`Boolean`  
+- 返回值类型：`Boolean`
 
 ```clike
 [Js]
@@ -95,15 +95,15 @@ var open = pl.isOP();
 
 ```
 
-#### 断开玩家连接  
+#### 断开玩家连接
 
-`pl.kick([msg])`  
+`pl.kick([msg])`
 `pl.disconnect([msg])`
 
 - 参数：
-  - msg : `String`  
-    （可选参数）被踢出玩家出显示的断开原因。  
-    如果不传入，默认为“正在从服务器断开连接”  
+  - msg : `String`
+    （可选参数）被踢出玩家出显示的断开原因。
+    如果不传入，默认为“正在从服务器断开连接”
 - 返回值：是否成功断开连接
 - 返回值类型：`Boolean`
 
@@ -115,18 +115,18 @@ pl.kick();
 pl:kick()
 ```
 
-#### 发送一个文本消息给玩家  
+#### 发送一个文本消息给玩家
 
-`pl.tell(msg[,type])`  
+`pl.tell(msg[,type])`
 `pl.sendText(msg[,type])`
 
 - 参数：
 
-  - msg : `String`  
-    待发送的文本  
+  - msg : `String`
+    待发送的文本
 
-  - type : `Integer`  
-    （可选参数）发送的文本消息类型，默认为0  
+  - type : `Integer`
+    （可选参数）发送的文本消息类型，默认为0
 
     | type参数 | 消息类型                |
     | -------- | ----------------------- |
@@ -148,17 +148,17 @@ pl.tell("Welcome back ~ ",5);
 
 ```
 
-#### 广播一个文本消息给所有玩家  
+#### 广播一个文本消息给所有玩家
 
 `mc.broadcast(msg[,type])`
 
 - 参数：
 
-  - msg : `String`  
-    待发送的文本  
+  - msg : `String`
+    待发送的文本
 
-  - type : `Integer`  
-    （可选参数）发送的文本消息类型，默认为0  
+  - type : `Integer`
+    （可选参数）发送的文本消息类型，默认为0
 
     | type参数 | 消息类型                |
     | -------- | ----------------------- |
@@ -178,15 +178,15 @@ mc.broadcast("Hello everyone ~ ");
 
 ```
 
-#### 以某个玩家身份执行一条命令 
+#### 以某个玩家身份执行一条命令
 
 `pl.runcmd(cmd)`
 
 - 参数：
-  - cmd : `String`  
-    待执行的命令  
+  - cmd : `String`
+    待执行的命令
 - 返回值：是否执行成功
-- 返回值类型： `Boolean`   
+- 返回值类型： `Boolean`
 
 ```clike
 [Js]
@@ -201,20 +201,20 @@ var open = pl.runcmd("tp ~ ~+50 ~");
 `pl.talkAs(text)`
 
 - 参数：
-  - text : `String`  
-    模拟说话内容 
+  - text : `String`
+    模拟说话内容
 - 返回值：是否执行成功
-- 返回值类型： `Boolean`   
+- 返回值类型： `Boolean`
 
 <br>
 
-#### 传送玩家至指定位置  
+#### 传送玩家至指定位置
 
-`pl.teleport(pos)`  
+`pl.teleport(pos)`
 `pl.teleport(x,y,z,dimid)`
 
 - 参数：
-  - pos :`IntPos `/ `FloatPos`  
+  - pos :`IntPos `/ `FloatPos`
     目标位置坐标 （或者使用x, y, z, dimid来确定玩家位置）
 - 返回值：是否成功传送
 - 返回值类型：`Boolean`
@@ -227,7 +227,7 @@ pl.teleport(pos);
 
 ```
 
-#### 杀死玩家  
+#### 杀死玩家
 
 `pl.kill()`
 
@@ -247,7 +247,7 @@ pl.kill();
 `pl.hurt(damage)`
 
 - 参数：
-  - damage : `Integer`  
+  - damage : `Integer`
     对玩家造成的伤害数值
 - 返回值：是否造成伤害
 - 返回值类型：`Boolean`
@@ -261,20 +261,20 @@ pl.kill();
 `pl.setOnFire(time)`
 
 - 参数：
-  - time : `Integer`  
+  - time : `Integer`
     着火时长，单位秒
 - 返回值：是否成功着火
 - 返回值类型：`Boolean`
 
 <br>
 
-#### 重命名玩家  
+#### 重命名玩家
 
 `pl.rename(newname)`
 
 - 参数：
-  - newname : `String`  
-    玩家的新名字  
+  - newname : `String`
+    玩家的新名字
 - 返回值：是否重命名成功
 - 返回值类型：`Boolean`
 
@@ -302,7 +302,7 @@ pl.rename("newname");
 - 返回值：玩家对应的设备信息对象
 - 返回值类型：`Device`
 
-设备信息对象储存了与玩家设备有关的某些信息，如设备IP地址、设备类型、网络延迟等信息。  
+设备信息对象储存了与玩家设备有关的某些信息，如设备IP地址、设备类型、网络延迟等信息。
 关于设备信息对象的其他信息请参考 [设备信息对象 API](zh_CN/Development/GameAPI/Device.md)
 
 <br>
@@ -329,7 +329,7 @@ pl.rename("newname");
 
 <br>
 
-#### 获取玩家物品栏的容器对象  
+#### 获取玩家物品栏的容器对象
 
 `pl.getInventory()`
 
@@ -340,7 +340,7 @@ pl.rename("newname");
 
 <br>
 
-#### 获取玩家盔甲栏的容器对象  
+#### 获取玩家盔甲栏的容器对象
 
 `pl.getArmor()`
 
@@ -351,7 +351,7 @@ pl.rename("newname");
 
 <br>
 
-#### 获取玩家末影箱的容器对象  
+#### 获取玩家末影箱的容器对象
 
 `pl.getEnderChest()`
 
@@ -362,7 +362,7 @@ pl.rename("newname");
 
 <br>
 
-#### 获取玩家的重生坐标  
+#### 获取玩家的重生坐标
 
 `pl.getRespawnPosition()`
 
@@ -376,7 +376,7 @@ pl.rename("newname");
 `pl.giveItem(item)`
 
 - 参数：
-  - iten : `Item`  
+  - iten : `Item`
     给予的物品对象
 - 返回值：是否成功给予
 - 返回值类型：`Boolean`
@@ -390,12 +390,12 @@ pl.rename("newname");
 `pl.clearItem(type)`
 
 - 参数：
-  - type : `String`  
+  - type : `String`
     要清除的物品对象类型名
 - 返回值：清除的物品个数
 - 返回值类型：`Integer`
 
-将玩家物品栏、主手、副手、盔甲栏中所有物品的type属性与此字符串进行比较  
+将玩家物品栏、主手、副手、盔甲栏中所有物品的type属性与此字符串进行比较
 如果相等，则清除此物品
 
 <br>
@@ -420,14 +420,14 @@ pl.rename("newname");
 
 <br>
 
-#### 修改玩家操作权限  
+#### 修改玩家操作权限
 
 `pl.setPermLevel(level)`
 
 - 参数：
 
-  - level : `Integer`  
-    目标操作权限等级  
+  - level : `Integer`
+    目标操作权限等级
 
     | 操作权限等级 | 对应操作权限    |
     | ------------ | --------------- |
@@ -453,7 +453,7 @@ pl.setPermLevel(1);
 
 - 参数：
 
-  - mode : `Integer`  
+  - mode : `Integer`
     目标游戏模式，0为生存模式，1为创造模式，2为极限模式
 
 - 返回值：是否成功修改
@@ -468,12 +468,12 @@ pl.setGameMode(1);
 
 ```
 
-#### 提高玩家经验等级 
+#### 提高玩家经验等级
 
 `pl.addLevel(count)`
 
 - 参数：
-  - count : `Integer`  
+  - count : `Integer`
     要提升的经验等级
 - 返回值：是否设置成功
 - 返回值类型：`Boolean`
@@ -483,21 +483,91 @@ pl.setGameMode(1);
 //对于一个玩家对象pl
 pl.addLevel(6);
 [Lua]
-
+--对于一个玩家对象pl
+pl:addLevel(6)
 ```
 
-#### 传送玩家至指定服务器  
+#### 获取玩家经验等级
+
+`pl.getLevel()`
+
+- 返回值：玩家的经验等级
+- 返回值类型：`Integer`
+
+```clike
+[Js]
+//对于一个玩家对象pl
+pl.getLevel();
+[Lua]
+--对于一个玩家对象pl
+pl.getLevel()
+```
+
+#### 重置玩家经验
+
+`pl.resetLevel()`
+
+- 返回值：是否设置成功
+- 返回值类型：`Boolean`
+
+```clike
+[Js]
+//对于一个玩家对象pl
+pl.resetLevel();
+[Lua]
+--对于一个玩家对象pl
+pl:resetLevel()
+```
+
+#### 获取玩家升级所需的经验值
+
+`pl.getXpNeededForNextLevel()`
+
+- 返回值：玩家升级所需的经验值
+- 返回值类型：`Integer`
+
+```clike
+[Js]
+//对于一个玩家对象pl
+pl.getXpNeededForNextLevel();
+[Lua]
+--对于一个玩家对象pl
+pl.getXpNeededForNextLevel()
+```
+
+注意，此方法在计算时会忽略超出等级的经验值
+
+#### 提高玩家经验值
+
+`pl.addExperience(count)`
+
+- 参数：
+  - count : `Integer`
+    要提升的经验值
+- 返回值：是否设置成功
+- 返回值类型：`Boolean`
+
+```clike
+[Js]
+//对于一个玩家对象pl
+pl.addExperience(6);
+[Lua]
+--对于一个玩家对象pl
+pl:addExperience(6)
+```
+
+#### 传送玩家至指定服务器
 
 `pl.transServer(server,port)`
 
 - 参数：
-  - server : `String`  
+  - server : `String`
     目标服务器IP / 域名
 
-  - port : `Integer`  
-    目标服务器端口  
+  - port : `Integer`
+    目标服务器端口
 - 返回值：是否成功传送
-- 返回值类型：`Boolean` 
+- 返回值类型：`Boolean`
 
 ```clike
 [Js]
@@ -512,7 +582,7 @@ pl.transServer("123.45.67.89",23333);
 `pl.crash()`
 
 - 返回值：是否成功执行
-- 返回值类型：`Boolean` 
+- 返回值类型：`Boolean`
 
 ```clike
 //对于一个玩家对象pl
@@ -529,12 +599,12 @@ pl:crash()
 
 - 参数：
 
-  - title : `String`  
-    侧边栏标题  
-  - data : `Object<String-Integer>`  
-    侧边栏对象内容对象  
+  - title : `String`
+    侧边栏标题
+  - data : `Object<String-Integer>`
+    侧边栏对象内容对象
     对象中的每个键 - 值对将被设置为侧边栏内容的一行
-  - sortOrder : `Number`  
+  - sortOrder : `Number`
     （可选参数）侧边栏内容的排序顺序。`0`为按分数升序，`1`为按分数降序。默认值为`1`
 
 - 返回值：是否成功设置
@@ -564,15 +634,15 @@ pl.removeSidebar();
 
 ```
 
-#### 设置玩家看到的自定义Boss血条  
+#### 设置玩家看到的自定义Boss血条
 
 `pl.setBossBar(title,percent)`
 
 - 参数：
-  - title : `String`  
-    自定义血条标题  
+  - title : `String`
+    自定义血条标题
 
-  - percent : `Integer`  
+  - percent : `Integer`
     血条中的血量百分比，有效范围为0~100。0为空血条，100为满
 - 返回值：是否成功设置
 - 返回值类型：`Boolean`
@@ -585,7 +655,7 @@ pl.setBossBar("Hello ~ ",80);
 
 ```
 
-#### 移除玩家的自定义Boss血条  
+#### 移除玩家的自定义Boss血条
 
 `pl.removeBossBar()`
 
@@ -614,7 +684,7 @@ pl.removeBossBar();
 `pl.setNbt(nbt)`
 
 - 参数：
-  - nbt : `NbtCompound`  
+  - nbt : `NbtCompound`
     NBT对象
 - 返回值：是否成功写入
 - 返回值类型：`Boolean`
@@ -628,7 +698,7 @@ pl.removeBossBar();
 `pl.addTag(tag)`
 
 - 参数：
-  - tag: `String`  
+  - tag: `String`
     要增加的tag字符串
 - 返回值：是否设置成功
 - 返回值类型：`Boolean`
@@ -640,7 +710,7 @@ pl.removeBossBar();
 `pl.removeTag(tag)`
 
 - 参数：
-  - tag: `String`  
+  - tag: `String`
     要移除的tag字符串
 - 返回值：是否移除成功
 - 返回值类型：`Boolean`
@@ -652,7 +722,7 @@ pl.removeBossBar();
 `pl.hasTag(tag)`
 
 - 参数：
-  - tag: `String`  
+  - tag: `String`
     要检查的tag字符串
 - 返回值：是否拥有这个Tag
 - 返回值类型：`Boolean`
@@ -690,14 +760,14 @@ pl.removeBossBar();
 
 ```
 {
-        "Base": 0, 
-        "Current": 0, 
-        "DefaultMax": 1024, 
-        "DefaultMin": -1024, 
-        "Max": 1024, 
-        "Min": -1024, 
+        "Base": 0,
+        "Current": 0,
+        "DefaultMax": 1024,
+        "DefaultMin": -1024,
+        "Max": 1024,
+        "Min": -1024,
         "Name": "minecraft:luck"
-}, 
+},
 ```
 
 （此处使用Json格式直观地展示）
@@ -713,12 +783,12 @@ pl.removeBossBar();
 
 <br>
 
-#### 设置玩家疾跑状态 
+#### 设置玩家疾跑状态
 
 `pl.setSprinting(sprinting)`
 
 - 参数：
-  - sprinting : `Boolean`  
+  - sprinting : `Boolean`
     是否为疾跑状态
 - 返回值：是否设置成功
 - 返回值类型：`Boolean`

@@ -6,10 +6,10 @@
 
 #### 通过玩家获取
 
-通过玩家对象的`.getDevice`成员函数，来获取一个玩家对应的**设备信息对象**    
-详见 [玩家对象 API](zh_CN/Development/GameAPI/Player.md)      
+通过玩家对象的`.getDevice`成员函数，来获取一个玩家对应的**设备信息对象**
+详见 [玩家对象 API](zh_CN/Development/GameAPI/Player.md)
 
->  注意：不要**长期保存**一个设备信息对象  
+>  注意：不要**长期保存**一个设备信息对象
 > 当设备对应的玩家退出游戏时，对应的对象将变得无效。因此，如果有长期操作某个对象的需要，请通过上述途径获取实时的设备信息对象
 
 <br>
@@ -27,7 +27,7 @@
 | dv.os            | 玩家设备的操作系统类型       | `String`  |
 | dv.clientId      | 玩家客户端的识别码ID         | `String`  |
 
-这些对象属性都是只读的，无法被修改 
+这些对象属性都是只读的，无法被修改
 
 其中，操作系统类型属性返回一个字符串，记录了玩家设备的操作系统。可能返回的值如下表
 
@@ -39,7 +39,7 @@
 | `Amazon`        | Amazon                |
 | `GearVR`        | GearVR                |
 | `Hololens`      | Hololens              |
-| `Windows10`     | 电脑Windows10         |
+| `Win10`         | 电脑Windows10         |
 | `Win32`         | 电脑Win32（教育版？） |
 | `TVOS`          | TVOS                  |
 | `PlayStation`   | 主机PlayStation       |
