@@ -9,7 +9,7 @@ All previous LXL plugins will continue to function normally under this new LiteL
 
 Starting with the merged version, LXL will **no longer need to be installed separately**. LL will carry a complete LXL engine when it is released
 
-### 👉[click to LiteLoaderBDS project](https://www.minebbs.com/liteloader/) 👈
+### 👉[Click here to LiteLoaderBDS Project](https://github.com/LiteLDev/LiteLoaderBDS) 👈
 
 <br>
 
@@ -24,7 +24,7 @@ LXL成为LL的一个子组件，我们将项目统称为 **LiteLoaderBDS** 加�
 
 从合并版本开始，LXL将 **不再需要单独安装**。LL发行时将自动携带LXL引擎
 
-### 👉[点击前往 LiteLoaderBDS 项目](https://www.minebbs.com/liteloader/) 👈
+### 👉[点击前往 LiteLoaderBDS 项目](https://github.com/LiteLDev/LiteLoaderBDS) 👈
 
 <br>
 
