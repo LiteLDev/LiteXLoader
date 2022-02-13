@@ -1,3 +1,53 @@
+# Major Update Notice
+
+From BDS 1.18.11, the LiteXLoader project **has been merged into** LiteLoaderBDS project  
+LXL becomes a sub-component of LL, and we will name the whole project as **LiteLoaderBDS** (**LL**)
+
+Thereafter, LiteLoaderBDS will continue to be updated as a generic & strong BDS plugin loader for C++, Go, Js, Lua
+and other languages   
+All previous LXL plugins will continue to function normally under this new LiteLoaderBDS, and all existing APIs will remain unchanged
+
+Starting with the merged version, LXL will **no longer need to be installed separately**. LL will carry a complete LXL engine when it is released
+
+### 👉[click to LiteLoaderBDS project](https://www.minebbs.com/liteloader/) 👈
+
+# 重大更新提示
+
+从BDS 1.18.11开始，LiteXLoader加载器项目 **合并至** LiteLoaderBDS 项目之中  
+LXL成为LL的一个子组件，我们将项目统称为 **LiteLoaderBDS** 加载器（**LL**）
+
+此后，LL加载器将作为C++、Go、Js、Lua
+等语言的通用加载器继续更新  
+所有先前的LXL插件在新版LL下继续正常运行，现有所有API不变
+
+从合并版本开始，LXL将 **不再需要单独安装**。LL发行时将自动携带LXL引擎
+
+### 👉[点击前往 LiteLoaderBDS 项目](https://www.minebbs.com/liteloader/) 👈
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # LiteXLoader - 划时代 x 跨语言BDS脚本插件框架
 
 [![GitHub license](https://img.shields.io/github/license/LiteLDev/LiteXLoader)](https://github.com/LiteLDev/LiteXLoader/blob/main/LICENSE)
