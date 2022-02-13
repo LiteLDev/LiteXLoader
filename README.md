@@ -11,6 +11,8 @@ Starting with the merged version, LXL will **no longer need to be installed sepa
 
 ### 👉[click to LiteLoaderBDS project](https://www.minebbs.com/liteloader/) 👈
 
+<br>
+
 # 重大更新提示
 
 从BDS 1.18.11开始，LiteXLoader加载器项目 **合并至** LiteLoaderBDS 项目之中  
